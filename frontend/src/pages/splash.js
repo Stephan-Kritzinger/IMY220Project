@@ -5,9 +5,12 @@ import "../styles/splash.css"
 const Splash = () => {
     return(
         <main id="splash">
-            <section id="logo">
+            <h1 id="title" class="logo">
                 ProRepo
-            </section>
+            </h1>
+            <p id="slogan" class="logo">
+                The Project Management Site for Professionals
+            </p>
         </main>
     )
 };

@@ -1,6 +1,7 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import { BrowserRouter, Routes, Route } from "react-router"
+import "./styles/global.css"
 import Splash from "./pages/splash.js"
 
 const root = document.getElementById("root");
