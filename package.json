@@ -1,0 +1,36 @@
+{
+  "name": "imy220project",
+  "version": "1.0.0",
+  "description": "Repository for IMY 220 Project",
+  "main": "backend/server.js",
+  "scripts": {
+    "build": "webpack && babel backend/server.js -d backend/dist",
+    "start": "npm run build && node backend/dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stephan-Kritzinger/IMY220Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stephan-Kritzinger/IMY220Project/issues"
+  },
+  "homepage": "https://github.com/Stephan-Kritzinger/IMY220Project#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "babel-loader": "^10.0.0",
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "path": "^0.12.7",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router": "^7.8.2"
+  }
+}
