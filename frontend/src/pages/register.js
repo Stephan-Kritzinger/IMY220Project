@@ -6,15 +6,16 @@ import Logo from "../components/logo.js"
 const Register = () => {
     return(
         <>
-            <main>
-                <section>
+            <main id="container">
+                <div id="body">
                     <Logo />
-                </section>
-                <section>
-                    <form>
-                        
-                    </form>
-                </section>
+                    <div className="seperator"></div>
+                    <section>
+                        <form>
+
+                        </form>
+                    </section>
+                </div>
             </main>
         </>
     )
