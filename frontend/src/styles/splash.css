@@ -1,8 +1,14 @@
+#top{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 #splash {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     flex-direction: column;
 }
 
@@ -19,6 +25,16 @@
     font-size: 2rem;
     margin-left: 580px;
     transform: translateY(-15px);
-    
+}
+#login{
+    margin-left: 100px;
+}
+#signin{
+    background-color: #780D9C;
+    border-radius: 100px;
+    border: 0;
+    padding: 5px;
+    width: 65%;
+    color: #FFFFFF;
 }
 
