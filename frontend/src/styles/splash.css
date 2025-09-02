@@ -16,6 +16,7 @@
     font-family: 'K2D', sans-serif;
     margin-top: 0;
     margin-bottom: 0;
+    color: #FFFFFF;
 }
 #title{
     font-size: 3rem;
@@ -28,6 +29,7 @@
 }
 #login{
     margin-left: 100px;
+    color: #FFFFFF;
 }
 #signin{
     background-color: #780D9C;
@@ -36,5 +38,9 @@
     padding: 5px;
     width: 65%;
     color: #FFFFFF;
+}
+Link{
+    color: #3685D5;
+    text-decoration: underline;
 }
 

@@ -18,7 +18,7 @@ const Splash = () => {
                     <button id="signin">Sign in Now</button>
                 </div>
                 <div>
-                    Dont have an account? <a>Register Now</a>
+                    Dont have an account? <Link to="/Register">Register Now</Link>
                 </div>
             </section>
         </div>
