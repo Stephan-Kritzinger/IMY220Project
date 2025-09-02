@@ -1,0 +1,10 @@
+.logo{
+    font-family: 'K2D', sans-serif;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #FFFFFF;
+}
+.logo > h1{
+    font-size: 3rem;
+    font-weight: bold;
+}
