@@ -20,12 +20,12 @@ const Result = () => {
             <div className="seperator"></div>
             {isProjectSelected && <div className="scontainer">
                 {repos.map(name => {
-                    return <Repo img="null" title={name} />;
+                    return <Repo img="null" title={name} key={name}/>;
                 })}
             </div>}
             {!isProjectSelected && <div className="scontainer">
                 {profiles.map(name => {
-                    return <Profile img="null" title={name} />;
+                    return <Profile img="null" title={name} key={name}/>;
                 })}
             </div>}
         </div>

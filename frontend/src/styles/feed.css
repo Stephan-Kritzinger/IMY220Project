@@ -1,0 +1,21 @@
+.pageTitle {
+    color: white;
+}
+#feed{
+    margin: 30px;
+    display: flex;
+    flex-direction: column;
+}
+.feedHeader{
+    margin: 10px;
+    padding-left: 10px;
+}
+.feedHeader > span{
+    cursor: pointer;
+    color: #B1A4A4;
+}
+.fActive{
+    font-weight: bold;
+    text-decoration: underline;
+    color: white !important;
+}
