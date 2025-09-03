@@ -1,0 +1,14 @@
+.search{
+    align-self: center;
+}
+input{
+    border-radius: 100px;
+    height: 50%;
+    width:auto;
+    padding-right: 40px; 
+}
+i{
+    position: inherit;
+    transform: translateX(-150%);
+    pointer-events: none;
+}

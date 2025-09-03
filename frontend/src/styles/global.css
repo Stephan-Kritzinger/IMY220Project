@@ -5,3 +5,6 @@
 html{
     background-image: url('../images/micro_carbon.png');
 }
+body{
+    margin:0;
+}

@@ -1,0 +1,12 @@
+nav{
+    display: flex;
+    background-color: #053656;
+    margin: 0;
+    padding: 5px;
+}
+#logo > h1 {
+    font-size: 2rem !important;
+}
+.search{
+    margin-left: auto;
+}

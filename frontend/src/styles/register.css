@@ -43,6 +43,20 @@ h2{
     width: 65%;
     align-self: center;
 }
+.form-group > .link-button{
+    display: inline-block;         
+    background-color: #780D9C;
+    border-radius: 100px;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    width: 65%;
+    text-align: center;
+    padding: 0.1rem 1rem;
+    text-decoration: none;         
+    cursor: pointer;
+    align-self: center;
+}
 .form-group > input {
     border: 0px;
     border-radius: 10px;
