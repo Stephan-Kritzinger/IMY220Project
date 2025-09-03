@@ -9,6 +9,10 @@ const Navbar = () => {
         <nav>
             <Logo />
             <Search className="sElement"/>
+            <span className="active">Feed</span>
+            <span>Friends</span>
+            <span>Settings</span>
+            <img src="./images/user.svg"></img>
         </nav>
     )
 }

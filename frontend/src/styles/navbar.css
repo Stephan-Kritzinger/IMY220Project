@@ -3,10 +3,27 @@ nav{
     background-color: #053656;
     margin: 0;
     padding: 5px;
+    align-items: center;
 }
 #logo > h1 {
     font-size: 2rem !important;
 }
 .search{
     margin-left: auto;
+    margin-right: 3rem;
+}
+span{
+    margin-right: 2rem;
+    font-size: 1.2rem;
+    color: #FFFFFF;
+}
+.active{
+    text-decoration: underline;
+    font-style: italic;
+    font-weight: bold;
+}
+img{
+    border-radius: 50%;
+    background-color: #FFFFFF;
+    width: 2.5rem;
 }
