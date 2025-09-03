@@ -14,11 +14,14 @@ i{
     pointer-events: none;
 }
 .results{
-    border: 2px solid white;
+    border: 2px solid #413E3E;
     position: absolute;
     margin-top: 10px;
     top: 100%;
     left: -25%;
     width: 20rem;
-    height: 10rem;
+}
+.repos{
+    max-height: 300px;
+    overflow: scroll;
 }
