@@ -4,13 +4,13 @@ import "../styles/feed.css"
 import Navbar from "../components/navbar"
 import Menu from "../components/feedMenu.js"
 
-const Feed = () => {
+const Feed = ({ onUserClick }) => {
     return(
         <>
             <Navbar />
             <main id="feed">
                 <h1 className="pageTitle">FEED</h1>
-                <Menu />
+                <Menu onUserClick={onUserClick}/>
             </main>
         </>
     )

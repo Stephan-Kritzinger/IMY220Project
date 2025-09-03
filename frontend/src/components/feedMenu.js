@@ -116,7 +116,7 @@ const globalRepos = [
 ];
 
 
-const Menu = () => {
+const Menu = ({onUserClick}) => {
     const [isFriendsSelected, setIsFriendsSelected] = useState(true);
 
     return(
@@ -128,10 +128,10 @@ const Menu = () => {
             <div className="seperator"></div>
             <div className="feedRepos">
                 {isFriendsSelected && repos.map(repo => {
-                    return <Repo repo={repo} />
+                    return <Repo repo={repo} onUserClick={onUserClick} key={repo.title}/>
                 })}
                 {!isFriendsSelected && globalRepos.map(repo => {
-                    return <Repo repo={repo} />
+                    return <Repo repo={repo} onUserClick={onUserClick} key={repo.title}/>
                 })}
             </div>
             
