@@ -7,18 +7,18 @@
     display: inline-block;
     margin-right: 10px;
 }
-.repoTitle{
+.profName{
     font-size: 1rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.repo{
+.profile{
     display: flex;
     padding: 15px 20px;
     align-items: center;
     cursor: pointer;
 }
-.repo:hover{
+.profile:hover{
     background-color: #635f5f;
 }

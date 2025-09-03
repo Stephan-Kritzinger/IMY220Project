@@ -21,7 +21,10 @@ i{
     left: -25%;
     width: 20rem;
 }
-.repos{
+.scontainer{
     max-height: 300px;
     overflow: scroll;
+}
+.rHeader > span{
+    cursor: pointer;
 }

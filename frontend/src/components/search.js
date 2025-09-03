@@ -3,24 +3,31 @@ import { useState } from "react"
 import { Link } from "react-router"
 import "../styles/search.css"
 import Repo from "./repoPreview.js"
+import Profile from "./profilePreview.js"
+
+const repos = ["Lorem", "Ipsum", "Foo", "Test", "Length Test AAAAAAAAAAAAAAAAAAAAA", "Scroll Test 1", "Test 2"];
+const profiles = ["John Doe", "Jane Doe"]
 
 const Result = () => {
+    const [isProjectSelected, setIsProjectSelected] = useState(true);
+    
     return(
         <div className="results">
             <div className="rHeader">
-                <span className="rActive">Projects</span>
-                <span>People</span>
+                <span className={isProjectSelected ? "rActive" : ""} onClick={() => setIsProjectSelected(true)} onMouseDown={(e) => e.preventDefault()}>Projects</span>
+                <span className={isProjectSelected ? "" : "rActive"} onClick={() => setIsProjectSelected(false)} onMouseDown={(e) => e.preventDefault()}>People</span>
             </div>
             <div className="seperator"></div>
-            <div className="repos">
-                <Repo img="null" title="Lorem"/>
-                <Repo img="null" title="Ipsum"/>
-                <Repo img="null" title="Foo"/>
-                <Repo img="null" title="Test"/>
-                <Repo img="null" title="Length Test AAAAAAAAAAAAAAAAAAAAAAA"/>
-                <Repo img="null" title="Scroll Test 1"/>
-                <Repo img="null" title="Test 2"/>
-            </div>
+            {isProjectSelected && <div className="scontainer">
+                {repos.map(name => {
+                    return <Repo img="null" title={name} />;
+                })}
+            </div>}
+            {!isProjectSelected && <div className="scontainer">
+                {profiles.map(name => {
+                    return <Profile img="null" title={name} />;
+                })}
+            </div>}
         </div>
     )
 }
