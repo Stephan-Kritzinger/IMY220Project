@@ -8,3 +8,7 @@ html{
 body{
     margin:0;
 }
+.seperator{
+    padding: 2px;
+    border-bottom: 3px solid #413E3E;
+}

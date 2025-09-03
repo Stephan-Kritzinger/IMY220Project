@@ -1,5 +1,6 @@
 .search{
     align-self: center;
+    position: relative;
 }
 input{
     border-radius: 100px;
@@ -11,4 +12,13 @@ i{
     position: inherit;
     transform: translateX(-150%);
     pointer-events: none;
+}
+.results{
+    border: 2px solid white;
+    position: absolute;
+    margin-top: 10px;
+    top: 100%;
+    left: -25%;
+    width: 20rem;
+    height: 10rem;
 }

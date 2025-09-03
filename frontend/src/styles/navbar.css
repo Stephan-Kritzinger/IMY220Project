@@ -27,3 +27,18 @@ img{
     background-color: #FFFFFF;
     width: 2.5rem;
 }
+
+.rHeader{
+    margin: 5px 20px;
+}
+.rHeader > span{
+    font-size: 1rem;
+
+}
+.rActive{
+    text-decoration: underline;
+    font-weight: bold;
+}
+.rHeader > span:not(.rActive){
+    font-size: 0.9rem;
+}
