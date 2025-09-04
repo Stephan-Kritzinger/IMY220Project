@@ -8,6 +8,7 @@ import Register from "./pages/register.js"
 import Login from "./pages/login.js"
 import Feed from "./pages/feed.js"
 import Profile from "./components/profile.js"
+import Project from "./pages/project.js"
 
 const root = document.getElementById("root");
 
@@ -25,6 +26,8 @@ const App = () => {
                     <Route path="/Register" element={<Register />} />
                     <Route path="/Login" element={<Login />} />
                     <Route path="/Feed" element={<Feed onUserClick={handleUserClick}/>} />
+                    <Route path="/Project" element={<Project onUserClick={handleUserClick} />} />
+                    <Route path="/Project/:projectId" element={<Project onUserClick={handleUserClick} />} />
                 </Routes>
             </BrowserRouter>
              {selectedUser && (

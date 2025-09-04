@@ -10,7 +10,7 @@ const Repo = ({repo, onUserClick}) => {
             </div>
             <div className="content">
                 <div className="header">
-                    <span id="repoTitle">{repo.title}</span>
+                    <Link to="/Project"><span id="repoTitle">{repo.title}</span></Link>
                     <div className="repoStats">
                         <i className="fa-solid fa-download"></i><span>{repo.downloadCount}</span>
                         <i className="fa-regular fa-star"></i><span>{repo.favCount}</span>

@@ -1,0 +1,47 @@
+.projectName{
+    margin-left: 20px;
+    display: flex;
+}
+.projectTitle{
+    color: white;
+    text-align: left;
+    margin-top: 20px;
+    font-size: 2rem;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+.projectVersion, .projectDate{
+    margin-top: 40px;
+    color: #897F7F;
+    margin-right: 5px;
+}
+.projectStatus{
+    margin-left: 30px;
+    display: flex;
+}
+.projectBadge{
+    border-radius: 20px;
+    border: 0;
+    color: black;
+    padding: 5px 20px;
+    font-size: 0.8rem;
+}
+.pStatus{
+    margin-right: 5px;
+}
+.checkedIn {
+    background-color: #83FD78;
+}
+.profileActions{
+    margin-left: auto;
+    border-radius: 20px;
+    border: 0;
+    padding: 2px 20px;
+    color: white;
+    background-color: #12B912;
+    font-size: 1rem;
+}
+.profileActions > i {
+    transform: translateX(0%) !important;
+    margin-left: 5px;
+}
