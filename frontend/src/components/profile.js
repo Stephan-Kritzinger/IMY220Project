@@ -4,6 +4,8 @@ import { useState } from "react"
 import { Link } from "react-router"
 import "../styles/profile.css"
 import Detail from "./details.js"
+import Repo from "./repoPreview.js"
+import Friend from "./profilePreview.js"
 
 const details = [
     {
@@ -21,7 +23,12 @@ const details = [
     }
 ]
 
+const repos = ["Lorem", "Ipsum", "Foo", "Test", "Length Test AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Scroll Test 1", "Test 2", "Lorem", "Ipsum", "Foo", "Test", "Length Test AAAAAAAAAAAAAAAAAAAAA", "Scroll Test 1", "Test 2"];
+const profiles = ["John Doe", "Jane Doe"]
+
 const Profile = ({user, onClose}) => {
+    const [isFriendSelected, setIsFriendSelected] = useState(true);
+
     return ReactDOM.createPortal(
         <div className="profileOverlay" onClick={onClose}>
             <div className="profileOverview" onClick={(e) => e.stopPropagation()}>
@@ -41,8 +48,26 @@ const Profile = ({user, onClose}) => {
 
                 </div>
                 <div className="profileHeader">
-                    <button onClick={onClose}>Close Profile</button>
+                    <div className="profileOptions">
+                        <span className={isFriendSelected ? "profileActive" : ""} onClick={() => setIsFriendSelected(true)}>Mutual Friends</span>
+                        <span className={isFriendSelected ? "" : "profileActive"} onClick={() => setIsFriendSelected(false)}>Owned Repositories</span>
+                    </div>
+                    <div className="seperator"></div>
+                    <div className="profileOwned">
+                        {isFriendSelected && <div className="">
+                            {profiles.map(name => {
+                                return <Friend img="null" title={name} key={name}/>;
+                            })}
+                        </div>}
+                        {!isFriendSelected && <div className="">
+                            {repos.map(name => {
+                                return <Repo img="null" title={name} key={name}/>;
+                            })}
+                        </div>}
+                    </div>
+                    
                 </div>
+                
             </div>
         </div>,
         document.body
