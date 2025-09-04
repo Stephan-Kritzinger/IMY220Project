@@ -1,0 +1,34 @@
+.tempActImage{
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    background-color: white;
+    border-radius: 50%;
+    align-self: center;
+    justify-self: center;
+    margin: 0;
+}
+.iAct{
+    display: flex;
+}
+.actProfile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 96px;
+}
+.actTime{
+    color: #A29A9A;
+    font-size: 0.8rem;
+}
+.actTitle{
+    margin-right: 5px;
+}
+.actBody{
+    margin-left: 20px;
+    
+}
+.actBody > span{
+    color: #A29A9A;
+    font-size: 0.9rem;
+}

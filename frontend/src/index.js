@@ -26,8 +26,7 @@ const App = () => {
                     <Route path="/Register" element={<Register />} />
                     <Route path="/Login" element={<Login />} />
                     <Route path="/Feed" element={<Feed onUserClick={handleUserClick}/>} />
-                    <Route path="/Project" element={<Project onUserClick={handleUserClick} />} />
-                    <Route path="/Project/:projectId" element={<Project onUserClick={handleUserClick} />} />
+                    <Route path="/Project/:projectId?" element={<Project onUserClick={handleUserClick} />} />
                 </Routes>
             </BrowserRouter>
              {selectedUser && (

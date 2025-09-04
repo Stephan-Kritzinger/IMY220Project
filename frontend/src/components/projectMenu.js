@@ -4,6 +4,7 @@ import { useState } from "react"
 import "../styles/projectMenu.css"
 import About from "./projectAbout.js"
 import Files from "./projectFiles.js"
+import Activity from "./projectActivity.js"
 
 const files = [
   {
@@ -87,6 +88,7 @@ const Menu = ({onUserClick}) => {
             <div className="projectContent">
                 {headerState == "About" && <About />}
                 {headerState == "Files" && <Files files={files}/>}
+                {headerState == "Activity" && <Activity />}
             </div>
         </section>
     )
