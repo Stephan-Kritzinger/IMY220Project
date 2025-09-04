@@ -1,0 +1,35 @@
+.aboutImage{
+    margin-top: 40px;
+    align-self: center;
+    height: 128px;
+}
+.tempAboutImage{
+    display: inline-block;
+    min-width: 128px;
+    min-height: 128px;
+    background-color: white;
+    border-radius: 50%;
+}
+.aboutDescription{
+    margin: 20px;
+    color: white;
+}
+.aboutDescription > h3{
+    font-size: 2rem;
+}
+.aboutLanguages{
+    margin: 20px;
+    color: white;
+}
+.aboutLanguages > h3{
+    font-size: 2rem;
+}
+.aboutLanguages > .languageBadge {
+    margin-right: 20px;
+    min-width: 100px;
+    text-align: center;
+    background-color: orange;
+    border-radius: 20px;
+    padding: 5px 20px;
+    font-size: 1rem;
+}

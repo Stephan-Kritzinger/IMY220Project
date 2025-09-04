@@ -3,8 +3,9 @@ import { Link } from "react-router"
 import { useState } from "react"
 import "../styles/project.css"
 import Navbar from "../components/navbar"
+import Menu from "../components/projectMenu.js"
 
-const Project =({handleUserClick}) => {
+const Project =({onUserClick}) => {
     const [checkout, setCheckout] = useState(false);
     return(
         <>
@@ -20,6 +21,7 @@ const Project =({handleUserClick}) => {
                     <span className={checkout ? "projectBadge checkedOut" : "projectBadge checkedIn"}>{checkout ? "Checked-Out" : "Checked-In"}</span>
                     <span className="profileActions">Actions<i className="fa-solid fa-caret-down"></i></span>
                 </div>
+                <Menu onUserClick={onUserClick} />
             </main>
         </>
     )
