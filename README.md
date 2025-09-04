@@ -8,4 +8,5 @@ https://www.colourlovers.com/palette/2229995/blackbird_sky~
 
 # Instructions
 [sudo] docker build -t (iName) .
+
 [sudo] docker run -p (port):3000 --name (cName) (iName)
