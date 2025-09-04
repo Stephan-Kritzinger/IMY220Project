@@ -1,0 +1,54 @@
+.tempFileImage{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    margin-right: 5px;
+}
+.tempFileProfile{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 0px;
+}
+.file{
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    display: flex;
+    align-items: center;
+    width: 100;
+}
+.fileType{
+    margin-right: 5px;
+}
+.fileName{
+    margin-right: 100px;
+}
+.fileProfile{
+    margin-right: 10px;
+}
+.fileMessage{
+    font-size: 1rem;
+    color: #a8a6a6
+}
+.fileDate{
+    margin-left: auto;
+    font-size: 1rem;
+    color: #a8a6a6;
+    width: 33%;
+    justify-self: flex-end;
+}
+.fileCheck{
+    margin-left: auto;
+    display: flex;
+    width: 33%;
+    justify-self: center;
+}
+.fileIdentifier{
+    width: 33%;
+    justify-self: flex-start;
+}

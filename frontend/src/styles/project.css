@@ -46,3 +46,7 @@
     transform: translateX(0%) !important;
     margin-left: 5px;
 }
+.profileActive{
+    font-weight: bold;
+    text-decoration: underline;
+}
