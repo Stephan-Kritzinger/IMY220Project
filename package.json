@@ -4,7 +4,7 @@
   "description": "Repository for IMY 220 Project",
   "main": "backend/server.js",
   "scripts": {
-    "build": "webpack && babel backend/server.js -d backend/dist",
+    "build": "webpack && babel backend -d backend/dist --ignore backend/dist",
     "start": "npm run build && node backend/dist/server.js"
   },
   "repository": {
@@ -23,6 +23,7 @@
     "@babel/preset-env": "^7.28.3",
     "@babel/preset-react": "^7.27.1",
     "babel-loader": "^10.0.0",
+    "regenerator-runtime": "^0.14.1",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1"
   },
@@ -30,6 +31,7 @@
     "cors": "^2.8.5",
     "css-loader": "^7.1.2",
     "express": "^5.1.0",
+    "mongodb": "^6.20.0",
     "path": "^0.12.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

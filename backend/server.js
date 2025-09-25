@@ -3,7 +3,11 @@ import path from "path"
 import cors from "cors"
 const app = express();
 const port = 3000;
+import "regenerator-runtime/runtime"
 
+//Routes
+import usersRouter from "./routes/users.js"
+app.use("/users", usersRouter)
 app.use(cors());
 app.use(express.static('frontend/public'));
 
