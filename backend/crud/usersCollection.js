@@ -6,12 +6,8 @@ export class User{
         return await usersCollection.insertOne(userData);
     }
 
-    async getById(id){
-        return await usersCollection.findOne({_id: id});
-    }
-
-    async getByUsername(username){
-        return await usersCollection.findOne({username: username});
+    async getByField(field, value){
+        return await usersCollection.findOne({[field]: value}, {projection: {password: 0}})
     }
 
     async update(id, data){
