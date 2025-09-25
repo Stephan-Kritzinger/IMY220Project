@@ -5,7 +5,7 @@
   "main": "backend/server.js",
   "scripts": {
     "build": "webpack && babel backend -d backend/dist --ignore backend/dist",
-    "start": "npm run build && node backend/dist/server.js"
+    "start": "npm run build && node backend/dist/start.js"
   },
   "repository": {
     "type": "git",

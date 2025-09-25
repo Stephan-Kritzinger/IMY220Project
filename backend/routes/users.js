@@ -16,17 +16,24 @@ router.post("/register", express.json(), async (req, res) => {
         });
     }
 
-    const password = req.body.password;
+    const uPassword = req.body.password;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    if(!passwordRegex.test(password)){
+    if(!emailRegex.test(req.body.email)){
+        return res.status(400).json({
+            message: "Email validation failed"
+        });
+    }
+
+    if(!passwordRegex.test(uPassword)){
         return res.status(400).json({
             message: "Password validiation failed"
         });
     }
 
     //Sanitising user input
-    const {uPassword, ...safeUserData} = req.body;
+    const {password, ...safeUserData} = req.body;
 
 
     const result = await user.create(req.body);
