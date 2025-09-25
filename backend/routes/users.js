@@ -35,8 +35,14 @@ router.post("/register", express.json(), async (req, res) => {
     //Sanitising user input
     const {password, ...safeUserData} = req.body;
 
+    //Creating record to be added
+    const newuser = {
+        ...req.body,
+        joinDate: new Date(),
+    }
 
-    const result = await user.create(req.body);
+
+    const result = await user.create(newuser);
     const newId = result.insertedId;
     
 

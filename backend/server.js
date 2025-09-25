@@ -6,7 +6,9 @@ import "regenerator-runtime/runtime"
 
 //Routes
 import usersRouter from "./routes/users.js"
+import profileRouter from "./routes/profile.js"
 app.use("/user", usersRouter)
+app.use("/profile", profileRouter);
 app.use(cors());
 app.use(express.static('frontend/public'));
 
