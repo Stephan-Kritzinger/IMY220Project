@@ -52,4 +52,30 @@ router.get("/", express.json(), async (req, res) => {
     })
 })
 
+router.post("/friend", express.json(), async (req, res) => {
+    const cursor = await user.getByField("_id", req.body.id);
+    const currentUser = await user.getByField("_id", req.body.curr_id);
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "user not found"
+        });
+    }
+
+    await user.update(cursor._id, {
+        $addToSet: {
+            "friends.incoming": currentUser._id
+        }
+    })
+    await user.update(currentUser._id, {
+        $addToSet: {
+            "friends.outgoing": cursor._id
+        }
+    });
+
+    res.status(201).json({
+        message: "Friend request sent"
+    })
+})
+
 export default router;

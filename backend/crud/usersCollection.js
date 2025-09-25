@@ -19,7 +19,7 @@ export class User{
 
     async update(id, data){
         const usersCollection = getUsersCollection();
-        return await usersCollection.updateOne({_id: id}, {$set: data});
+        return await usersCollection.updateOne({_id: id}, data);
     }
 
     async delete(id) {
