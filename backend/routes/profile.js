@@ -1,13 +1,14 @@
 import express from "express"
 import { User } from "../crud/usersCollection.js"
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 const user = new User();
 
 //Used to get your profile details, or any other profile details
 router.get("/", express.json(), async (req, res) => {
-    const cursor = await user.getByField("_id", req.body.id);
-    const currentUser = await user.getByField("_id", req.body.curr_id); //Logged in user
+    const cursor = await user.getByField("_id", ObjectId.createFromHexString(req.body.id));
+    const currentUser = await user.getByField("_id", ObjectId.createFromHexString(req.body.curr_id)); //Logged in user
 
     if(!cursor){
         return res.status(404).json({
@@ -53,8 +54,8 @@ router.get("/", express.json(), async (req, res) => {
 })
 
 router.post("/friend", express.json(), async (req, res) => {
-    const cursor = await user.getByField("_id", req.body.id);
-    const currentUser = await user.getByField("_id", req.body.curr_id);
+    const cursor = await user.getByField("_id", ObjectId.createFromHexString(req.body.id));
+    const currentUser = await user.getByField("_id", ObjectId.createFromHexString(req.body.curr_id)); //Logged in user
 
     if(!cursor){
         return res.status(404).json({
@@ -64,17 +65,89 @@ router.post("/friend", express.json(), async (req, res) => {
 
     await user.update(cursor._id, {
         $addToSet: {
-            "friends.incoming": currentUser._id
+            "friends.incoming": currentUser._id.toString()
         }
     })
     await user.update(currentUser._id, {
         $addToSet: {
-            "friends.outgoing": cursor._id
+            "friends.outgoing": cursor._id.toString()
         }
     });
 
     res.status(201).json({
         message: "Friend request sent"
+    })
+})
+
+router.post("/accept", express.json(), async (req, res) => {
+    const cursor = await user.getByField("_id", ObjectId.createFromHexString(req.body.id));
+    const currentUser = await user.getByField("_id", ObjectId.createFromHexString(req.body.curr_id)); //Logged in user
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "user not found"
+        });
+    }
+
+    //Check if the user was sending a friend request in the first place
+    if(!cursor.friends.outgoing?.includes(currentUser._id) || !currentUser.friends.incoming?.includes(cursor._id)){
+        return res.status(404).json({
+            message: "There was no friend request sent"
+        })
+    }
+
+    await user.update(cursor._id, {
+        $pull: {
+            "friends.outgoing": currentUser._id
+        },
+        $addToSet: {
+            "friends.mutual": currentUser._id.toString()
+        }
+    });
+    await user.update(currentUser._id, {
+        $pull: {
+            "friends.incoming": cursor._id
+        },
+        $addToSet: {
+            "friends.mutual": cursor._id.toString()
+        }
+    })
+
+    res.status(200).json({
+        message: "Friend request accepted"
+    })
+})
+
+router.post("/reject", express.json(), async (req, res) => {
+    const cursor = await user.getByField("_id", ObjectId.createFromHexString(req.body.id));
+    const currentUser = await user.getByField("_id", ObjectId.createFromHexString(req.body.curr_id)); //Logged in user
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "user not found"
+        });
+    }
+
+    //Check if the user was sending a friend request in the first place
+    if(!cursor.friends.outgoing?.includes(currentUser._id) || !currentUser.friends.incoming?.includes(cursor._id)){
+        return res.status(404).json({
+            message: "There was no friend request sent"
+        })
+    }
+
+    await user.update(cursor._id, {
+        $pull: {
+            "friends.outgoing": currentUser._id
+        }
+    });
+    await user.update(currentUser._id, {
+        $pull: {
+            "friends.incoming": cursor._id
+        }
+    })
+
+    res.status(200).json({
+        message: "Friend request rejected"
     })
 })
 
