@@ -50,4 +50,30 @@ router.post("/register", express.json(), async (req, res) => {
     
 })
 
+router.post("/login", express.json(), async(req, res) => {
+    const cursor = await user.getByField("username", req.body.username);
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "User does not exist."
+        })
+    }
+
+    const password = await user.getPassword(cursor._id);
+
+    if(password.password != req.body.password){
+        console.log(cursor.password)
+        return res.status(401).json({
+            message: "Login failed"
+        })
+    }
+
+    res.status(200).json({
+        message: "Login successful",
+        user: {
+            ...cursor
+        }
+    })
+})
+
 export default router;
