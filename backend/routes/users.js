@@ -1,6 +1,5 @@
 import express from "express"
 import { User } from "../crud/usersCollection.js"
-import { ObjectId } from "mongodb"
 
 const router = express.Router();
 const user = new User();

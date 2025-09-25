@@ -1,9 +1,14 @@
 import express from "express"
 import path from "path"
 import cors from "cors"
+import { initDb } from "./db.js"
 const app = express();
 const port = 3000;
 import "regenerator-runtime/runtime"
+
+(async () => {
+    await initDb();
+})
 
 //Routes
 import usersRouter from "./routes/users.js"
