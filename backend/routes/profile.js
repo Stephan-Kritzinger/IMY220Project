@@ -90,7 +90,7 @@ router.post("/accept", express.json(), async (req, res) => {
     }
 
     //Check if the user was sending a friend request in the first place
-    if(!cursor.friends.outgoing?.includes(currentUser._id) || !currentUser.friends.incoming?.includes(cursor._id)){
+    if(!cursor.friends.outgoing?.includes(currentUser._id.toString()) || !currentUser.friends.incoming?.includes(cursor._id.toString())){
         return res.status(404).json({
             message: "There was no friend request sent"
         })
@@ -98,7 +98,7 @@ router.post("/accept", express.json(), async (req, res) => {
 
     await user.update(cursor._id, {
         $pull: {
-            "friends.outgoing": currentUser._id
+            "friends.outgoing": currentUser._id.toString()
         },
         $addToSet: {
             "friends.mutual": currentUser._id.toString()
@@ -106,7 +106,7 @@ router.post("/accept", express.json(), async (req, res) => {
     });
     await user.update(currentUser._id, {
         $pull: {
-            "friends.incoming": cursor._id
+            "friends.incoming": cursor._id.toString()
         },
         $addToSet: {
             "friends.mutual": cursor._id.toString()
@@ -129,7 +129,7 @@ router.post("/reject", express.json(), async (req, res) => {
     }
 
     //Check if the user was sending a friend request in the first place
-    if(!cursor.friends.outgoing?.includes(currentUser._id) || !currentUser.friends.incoming?.includes(cursor._id)){
+    if(!cursor.friends.outgoing?.includes(currentUser._id.toString()) || !currentUser.friends.incoming?.includes(cursor._id.toString())){
         return res.status(404).json({
             message: "There was no friend request sent"
         })
@@ -137,12 +137,12 @@ router.post("/reject", express.json(), async (req, res) => {
 
     await user.update(cursor._id, {
         $pull: {
-            "friends.outgoing": currentUser._id
+            "friends.outgoing": currentUser._id.toString()
         }
     });
     await user.update(currentUser._id, {
         $pull: {
-            "friends.incoming": cursor._id
+            "friends.incoming": cursor._id.toString()
         }
     })
 
