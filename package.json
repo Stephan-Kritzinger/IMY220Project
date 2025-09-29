@@ -28,11 +28,13 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
+    "adm-zip": "^0.5.16",
     "cors": "^2.8.5",
     "css-loader": "^7.1.2",
     "express": "^5.1.0",
     "jszip": "^3.10.1",
     "mongodb": "^6.20.0",
+    "multer": "^2.0.2",
     "path": "^0.12.7",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
