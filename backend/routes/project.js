@@ -1,9 +1,11 @@
 import express from "express"
 import { Project } from "../crud/projectCollection.js"
+import { User } from "../crud/usersCollection.js"
 import { ObjectId } from "mongodb"
 
 const router = express.Router();
 const project = new Project();
+const user = new User();
 
 router.get("/:id", async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.params.id));
@@ -14,11 +16,25 @@ router.get("/:id", async (req, res) => {
         });
     }
 
+    const contrib = cursor.contributers;
+
+    let contributersPlain = await Promise.all(
+        contrib.map(async c => {
+            const person = await user.getByField("_id", ObjectId.createFromHexString(c.uid));
+
+            return {
+                id: person._id,
+                username: person.username,
+                picture: person.picture
+            }
+        })
+    );
+    let {contributers, ...p} = cursor;
+    p.contributers = contributersPlain;
+
     return res.status(200).json({
         message: "Project found",
-        project: {
-            ...cursor
-        }
+        project: p
     })
 })
 
@@ -78,4 +94,4 @@ router.post("/create", express.json(), async (req, res) => {
 
 });
 
-export default router
+export default router;

@@ -50,8 +50,8 @@ router.get("/", express.json(), async (req, res) => {
     let friendArray = await Promise.all(
         mutuals.map(async friend => {
             const person = await user.getByField("_id", ObjectId.createFromHexString(friend));
-            console.log(person)
             return {
+                id: person._id,
                 username: person.username,
                 picture: person.picture
             }
