@@ -144,7 +144,7 @@ router.post("/checkout", express.json(), async (req, res) => {
         })
     }
 
-    if(!cursor.contributers.some(c => c.uid === req.body.uid)){
+    if(!cursor.contributers.some(c => c.uid === req.body.uid && c.removed !== true)){
         return res.status(403).json({
             message: "User is not registered as a contributer on this project"
         })
@@ -297,6 +297,51 @@ router.post("/update", upload.single('image'), express.json(), async (req, res) 
     return res.status(200).json({
         message: "Repo successfully updated"
     });
+})
+
+router.post("/remove", express.json(), async (req, res) => {
+    const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "project with id not found"
+        });
+    }
+
+    const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
+    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+        return res.status(403).json({
+            message: "User is not the owner of this repository"
+        })
+    }
+
+    if(req.body.uid == req.body.removeId){
+        return res.status(409).json({
+            message: "Owner can not remove themselves, transfer ownership instead."
+        })
+    }
+
+    if(cursor.details.checkedOutBy === req.body.removeId){
+        return res.status(409).json({
+            message: "This user currently has the project checked out, ensure the project is checked in before removing them."
+        })
+    }
+
+    if(!cursor.contributers.some(c => c.uid === req.body.removeId)){
+        return res.status(404).json({
+            message: "user is not part of the project"
+        })
+    }
+
+    await project.contribute(ObjectId.createFromHexString(req.body.pid), req.body.removeId, {
+        $set: {
+            "contributers.$.removed": true
+        }
+    })
+
+    return res.status(200).json({
+        message: "User removed"
+    })
 })
 
 
