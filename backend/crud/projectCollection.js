@@ -16,6 +16,10 @@ export class Project{
         const projectCollection = getProjectCollection();
         return await projectCollection.updateOne({_id: id}, data);
     }
+    async contribute(pid, uid, data){
+        const projectCollection = getProjectCollection();
+        return await projectCollection.updateOne({_id: pid, "contributers.uid": uid}, data);
+    }
 
     async delete(id) {
         const projectCollection = getProjectCollection();

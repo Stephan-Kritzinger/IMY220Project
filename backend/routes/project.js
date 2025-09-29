@@ -1,4 +1,5 @@
 import express from "express"
+import JSZip from "jszip"
 import { Project } from "../crud/projectCollection.js"
 import { User } from "../crud/usersCollection.js"
 import { ObjectId } from "mongodb"
@@ -93,5 +94,99 @@ router.post("/create", express.json(), async (req, res) => {
     })
 
 });
+
+router.get("/download/:id", async (req, res) => {
+    const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.params.id));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "project with id not found"
+        });
+    }
+
+    const files = cursor.files;
+
+    const zip = new JSZip();
+
+    files.map(f => {
+        const base64 = f.data.split(',')[1];
+        const buffer = Buffer.from(base64, 'base64');
+        zip.file(f.name, buffer, {date: new Date(f.modified)});
+    });
+
+    const zipBuffer = await zip.generateAsync({type: 'nodebuffer'});
+
+    res.set({
+        'Content-Type': "application/zip",
+        "Content-Disposition": 'attachment; filename="files.zip"',
+        "Content-Length": zipBuffer.length
+    });
+
+    res.send(zipBuffer);
+})
+
+router.post("/checkout", express.json(), async (req, res) => {
+    const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "project with id not found"
+        });
+    }
+
+    if(cursor.details.status === false){
+        return res.status(409).json({
+            message: "project is already checked out"
+        })
+    }
+
+    if(!cursor.contributers.some(c => c.uid === req.body.uid)){
+        return res.status(403).json({
+            message: "User is not registered as a contributer on this project"
+        })
+    }
+
+    const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
+    const contribution = {
+        title: `${u.username} checked the repository out`,
+        message: req.body.message,
+        date: new Date()
+    }
+
+    await project.contribute(ObjectId.createFromHexString(req.body.pid), req.body.uid, {
+        $push: {
+            "contributers.$.contributions": contribution
+        }
+    })
+
+    await project.update(ObjectId.createFromHexString(req.body.pid), {
+        $set: {
+            "details.status": false
+        }
+    })
+
+    //Download
+    const files = cursor.files;
+
+    const zip = new JSZip();
+
+    files.map(f => {
+        const base64 = f.data.split(',')[1];
+        const buffer = Buffer.from(base64, 'base64');
+        zip.file(f.name, buffer, {date: new Date(f.modified)});
+    });
+
+    const zipBuffer = await zip.generateAsync({type: 'nodebuffer'});
+
+    res.set({
+        'Content-Type': "application/zip",
+        "Content-Disposition": 'attachment; filename="files.zip"',
+        "Content-Length": zipBuffer.length
+    });
+
+    res.send(zipBuffer);
+});
+
+
 
 export default router;
