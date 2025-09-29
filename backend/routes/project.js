@@ -46,13 +46,6 @@ router.post("/create", express.json(), async (req, res) => {
             contributers: [
                 {
                     uid: user_id,
-                    contributions: [
-                        {
-                            datetime: timestamp
-                            title: title
-                            message: message
-                        }
-                    ]
                 }
             ]
         }
@@ -68,12 +61,12 @@ router.post("/create", express.json(), async (req, res) => {
             version: details.version,
             languages: details.languages,
             type: details.type,
-            created: details.created,
+            created: new Date(details.created),
             image: details.image,
             status: true 
         },
-        files: details.files,
-        contributers: details.contributers
+        files: req.body.files,
+        contributers: req.body.contributers
     }
 
     const result = project.create(repo);
