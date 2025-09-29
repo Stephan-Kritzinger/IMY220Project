@@ -41,37 +41,25 @@ router.get("/:id", async (req, res) => {
     })
 })
 
-router.post("/create", express.json(), async (req, res) => {
-    /* Current format of req
-        {
-            details: {
-                name: name,
-                description: description,
-                version: version,
-                languages: [
-                
-                ],
-                type: type,
-                created: date,
-                image: base64
-            },
-            files: [
-                {
-                    name: name
-                    modified: date
-                    data: base64
-                }
-            ],
-            contributers: [
-                {
-                    uid: user_id,
-                }
-            ]
-        }
-    */
+router.post("/create", upload.fields([{name: 'zipfile', maxCount:1}, {name: 'image', maxCount: 1}]),express.json(), async (req, res) => {
 
-    const details = req.body.details;
+    const details = JSON.parse(req.body.details);
+    let contributers = JSON.parse(req.body.contributers);
+    contributers.push({uid: req.body.uid});
 
+    const image = req.files.image[0];
+    const imageBase64 = image ? `data:${image.mimetype};base64,${image.buffer.toString('base64')}` : null;
+
+    const zipBuffer = req.files.zipfile[0];
+
+    const zip = new adm_zip(zipBuffer.buffer);
+    const zipFiles = zip.getEntries();
+
+    const files = zipFiles.map(entry => ({
+        name: entry.entryName,
+        modified: entry.header.time,
+        data: `data:application/octet-stream;base64,${entry.getData().toString('base64')}`
+    }));
 
     const repo = {
         details: {
@@ -81,21 +69,34 @@ router.post("/create", express.json(), async (req, res) => {
             languages: details.languages,
             type: details.type,
             created: new Date(details.created),
-            image: details.image,
+            image: imageBase64,
             status: true,
             checkedOutBy: null 
         },
-        files: req.body.files,
-        contributers: req.body.contributers
+        files: files,
+        contributers: contributers
     }
 
-    const result = project.create(repo);
+    const result = await project.create(repo);
+
+    const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
+
+    if(!u.repositories){
+        await user.update(ObjectId.createFromHexString(req.body.uid), {
+            $set : { repositories: []}
+        })
+    }
+
+    await user.update(ObjectId.createFromHexString(req.body.uid), {
+        $addToSet: {
+            repositories: result.insertedId
+        }
+    })
 
     return res.status(201).json({
         message: "Repo created successfully",
         rid: result.insertedId
-    })
-
+    });
 });
 
 router.get("/download/:id", async (req, res) => {
@@ -248,7 +249,8 @@ router.post("/checkin", express.json(), upload.single('zipfile'), async (req, re
         $set: {
             files: updatedFiles,
             "details.status": true,
-            "details.checkedOutBy": null
+            "details.checkedOutBy": null,
+            "details.version": req.body.version
         }
     });
 
@@ -261,8 +263,8 @@ router.post("/checkin", express.json(), upload.single('zipfile'), async (req, re
     return res.status(201).json({
         message: "Checked in successfully"
     })
-
-
 })
+
+
 
 export default router;
