@@ -265,6 +265,40 @@ router.post("/checkin", express.json(), upload.single('zipfile'), async (req, re
     })
 })
 
+router.post("/update", upload.single('image'), express.json(), async (req, res) => {
+    const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "project with id not found"
+        });
+    }
+
+    const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
+    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+        return res.status(403).json({
+            message: "User is not the owner of this repository"
+        })
+    }
+
+    const image = req.file;
+    const imageBase64 = image ? `data:${image.mimetype};base64,${image.buffer.toString('base64')}` : null;
+
+    const updateFields = {};
+    if(req.body.name) updateFields["details.name"] = req.body.name;
+    if(req.body.description) updateFields["details.description"] = req.body.description;
+    if(imageBase64) updateFields["details.image"] = imageBase64;
+    if(req.body.type) updateFields["details.type"] = req.body.type;
+
+    await project.update(ObjectId.createFromHexString(req.body.pid), {
+        $set: updateFields
+    });
+    
+    return res.status(200).json({
+        message: "Repo successfully updated"
+    });
+})
+
 
 
 export default router;
