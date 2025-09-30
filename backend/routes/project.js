@@ -344,6 +344,112 @@ router.post("/remove", express.json(), async (req, res) => {
     })
 })
 
+router.post("/relinquish", express.json(), async (req, res) => {
+    const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "project with id not found"
+        });
+    }
+
+    const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
+    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+        return res.status(403).json({
+            message: "User is not the owner of this repository"
+        })
+    }
+
+    if(req.body.uid == req.body.newOwnerId){
+        return res.status(409).json({
+            message: "User is already the owner."
+        })
+    }
+
+    if(!cursor.contributers.some(c => c.uid === req.body.newOwnerId)){
+        return res.status(404).json({
+            message: "user is not part of the project"
+        })
+    }
+
+    await user.update(ObjectId.createFromHexString(req.body.uid), {
+        $pull: {
+            repositories: req.body.pid
+        }
+    })
+
+    const n = await user.getByField("_id", ObjectId.createFromHexString(req.body.newOwnerId));
+    if(!n.repositories){
+        await user.update(ObjectId.createFromHexString(req.body.newOwnerId), {
+            $set : { repositories: []}
+        })
+    }
+
+    await user.update(ObjectId.createFromHexString(req.body.newOwnerId), {
+        $addToSet: {
+            repositories: req.body.pid
+        }
+    })
+
+    return res.status(200).json({
+        message: "Owner status transferred"
+    })
+})
+
+router.post("/delete", express.json(), async (req, res) => {
+    const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "project with id not found"
+        });
+    }
+
+    const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
+    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+        return res.status(403).json({
+            message: "User is not the owner of this repository"
+        })
+    }
+
+    await project.delete(ObjectId.createFromHexString(req.body.pid));
+    await user.update(ObjectId.createFromHexString(req.body.uid), {
+        $pull: {
+            repositories: req.body.pid
+        }
+    })
+    
+    return res.status(200).json({
+        message: "Project deleted successfully"
+    })
+})
+
+router.post("/add", express.json(), async (req, res) => {
+    const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "project with id not found"
+        });
+    }
+
+    if(cursor.contributers.some(c => c.uid === req.body.newId)){
+        return res.status(404).json({
+            message: "user is already a part of the project"
+        })
+    }
+
+    await project.update(ObjectId.createFromHexString(req.body.pid), {
+        $addToSet: {
+            contributers: {uid: req.body.newId}
+        }
+    })
+
+    return res.status(200).json({
+        message: "Added new user to the repository"
+    })
+})
+
 
 
 export default router;
