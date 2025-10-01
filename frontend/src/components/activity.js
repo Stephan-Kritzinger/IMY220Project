@@ -12,7 +12,7 @@ const Activity = ({act}) => {
             <div className="actDetails">
                 <div className="actHeader">
                     <span className="actTitle">{act.title}</span>
-                    <span className="actTime">{act.time}</span>
+                    <span className="actTime">{new Date(act.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                 </div>
                 <div className="actBody">
                     <span>{act.message}</span>

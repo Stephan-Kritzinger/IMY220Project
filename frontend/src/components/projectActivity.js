@@ -53,12 +53,39 @@ const acts = [
 ];
 
 
-const Activity = () => {
+const Activity = ({repo}) => {
+  console.log(repo);
+    const allContributions = repo
+      .flatMap(c => c.contributions || [])
+      .map(c => ({
+        ...c,
+        fullDate: new Date(c.date),
+        dateOnly: new Date(c.date).toISOString().split("T")[0]
+      }));
+
+      const grouped = allContributions.reduce((acc, curr) => {
+        const date = curr.dateOnly;
+        acc[date] = acc[date] || [];
+        acc[date].push(curr)
+        return acc;
+      }, [])
+
+      Object.keys(grouped).forEach(date => {
+        grouped[date].sort((a,b) => b.fullDate - a.fullDate);
+      })
+
+      const sortedDate = Object.keys(grouped).sort();
+
+      const groupedContributions = sortedDate.map(date => ({
+        date,
+        contributions: grouped[date]
+      }));
+                                    
     return(
         <>
             <h3>Recent Activity</h3>
-            {acts.map(act => {
-                return <ActivityGroup date={act.date} activities={act.activities} />
+            {groupedContributions.map(act => {
+                return <ActivityGroup date={act.date} activities={act.contributions} />
             })}
         </>
     )

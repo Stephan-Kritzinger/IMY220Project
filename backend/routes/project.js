@@ -10,6 +10,12 @@ const project = new Project();
 const user = new User();
 const upload = new multer();
 
+router.get("/allRepos", async (req, res) => {
+    const cursor = await project.get();
+
+    return res.status(200).json(cursor); 
+})
+
 router.get("/:id", async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.params.id));
 
@@ -24,11 +30,11 @@ router.get("/:id", async (req, res) => {
     let contributersPlain = await Promise.all(
         contrib.map(async c => {
             const person = await user.getByField("_id", ObjectId.createFromHexString(c.uid));
-
             return {
                 id: person._id,
                 username: person.username,
-                picture: person.picture
+                picture: person.picture,
+                contributions: c.contributions || []
             }
         })
     );
@@ -240,7 +246,7 @@ router.post("/checkin", express.json(), upload.single('zipfile'), async (req, re
 
     const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
     const contribution = {
-        name: `${u.username} checked the repository in`,
+        title: `${u.username} checked the repository in`,
         message: req.body.message,
         date: new Date()
     }
@@ -433,10 +439,25 @@ router.post("/add", express.json(), async (req, res) => {
         });
     }
 
-    if(cursor.contributers.some(c => c.uid === req.body.newId)){
-        return res.status(404).json({
-            message: "user is already a part of the project"
-        })
+    const existingContributor = cursor.contributers.find(c => c.uid === req.body.newId);
+
+    if (existingContributor) {
+        if (existingContributor.removed) {
+            // Reactivate the contributor
+            await project.contribute(ObjectId.createFromHexString(req.body.pid), req.body.newId, {
+                $set: {
+                    "contributers.$.removed": false
+                }
+            })
+            return res.status(200).json({
+                message: "Reactivated previously removed contributor"
+            });
+        }
+        else {
+            return res.status(404).json({
+                message: "user is already a part of the project"
+            });
+        }
     }
 
     await project.update(ObjectId.createFromHexString(req.body.pid), {

@@ -10,6 +10,33 @@
     background-color: white;
     border-radius: 50%;
 }
+.tempAboutImage:hover {
+    transform: scale(1.05);
+}
+
+.imageModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modalImage {
+    min-width: 300px;
+    min-height: 300px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    image-rendering: auto;
+    border-radius: 0;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
 .aboutDescription{
     margin: 20px;
     color: white;

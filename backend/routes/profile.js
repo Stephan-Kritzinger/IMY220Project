@@ -1,12 +1,14 @@
 import express from "express"
 import { User } from "../crud/usersCollection.js"
+import { Project } from "../crud/projectCollection.js"
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
 const user = new User();
+const project = new Project();
 
 //Used to get your profile details, or any other profile details
-router.get("/", express.json(), async (req, res) => {
+router.post("/", express.json(), async (req, res) => {
     const cursor = await user.getByField("_id", ObjectId.createFromHexString(req.body.id));
     const currentUser = await user.getByField("_id", ObjectId.createFromHexString(req.body.curr_id)); //Logged in user
 
@@ -45,7 +47,7 @@ router.get("/", express.json(), async (req, res) => {
 
     //The friends tab will be sanitised to a single field called friendStatus to determine how the friend request button should render.
 
-    const mutuals = currentUser.friends.mutual.filter(user => cursor.friends.mutual.includes(user) && user !== currentUser._id.toString());
+    const mutuals = currentUser.friends.mutual.filter(user => cursor.friends.mutual.includes(user) && user !== currentUser._id.toString() && user !== cursor._id.toString());
 
     let friendArray = await Promise.all(
         mutuals.map(async friend => {
@@ -58,15 +60,27 @@ router.get("/", express.json(), async (req, res) => {
         })
     );
 
+    let repos = await Promise.all(
+        (Array.isArray(cursor.repositories) ? cursor.repositories : []).map(async r => {
+            const rd = await project.getByField("_id", r);
+            return {
+                _id: rd._id,
+                name: rd.details.name,
+                image: rd.details.image
+            };
+        })
+    );
+
+
     const profile = {
             _id: cursor._id.toString(),
             username: cursor.username, 
             email: cursor.email,
-            joindate: cursor. joindate,
+            joinDate: cursor.joinDate,
             picture: cursor.picture,
             details: cursor.details,
             mutuals: friendArray,
-            repositories: cursor.repositories
+            repositories: repos
     }
 
 

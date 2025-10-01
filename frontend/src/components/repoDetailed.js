@@ -3,35 +3,38 @@ import { Link } from "react-router"
 import "../styles/repoDetailed.css"
 
 const Repo = ({repo, onUserClick}) => {
+    const decodeImages = () => {
+
+    }
     return(
         <div className="repository">
             <div className="profileImage">
-                <span className="repoImage"></span>
+                <img className="repoImage" src={repo.details.image} />
             </div>
             <div className="content">
                 <div className="header">
-                    <Link to="/Project"><span id="repoTitle">{repo.title}</span></Link>
-                    <div className="repoStats">
-                        <i className="fa-solid fa-download"></i><span>{repo.downloadCount}</span>
-                        <i className="fa-regular fa-star"></i><span>{repo.favCount}</span>
-                    </div>
+                    <Link to={`/Projects/${repo._id}`}><span id="repoTitle">{repo.details.name}</span></Link>
                 </div>
-                <div>{repo.description}</div>
+                <div>{repo.details.description}</div>
+                {repo.activity?.uid != null &&
                 <div className="rec"> 
                     <span className="recTitle">Recent Activity</span>
                     <div className="recAct">
                         <div className="avatarImage">
                             <span className="avatarImage"></span>
                         </div>
+                        
                         <div className="actContent">
                             <div className="actHeader">
-                                <span className="actUser" onClick={() => onUserClick(repo.user)}>{repo.user.username}</span>
-                                <span className="actTime">{repo.user.timestamp}</span>
+                                <span className="actUser" onClick={() => onUserClick(repo.activity.uid)}>{repo.activity.contribution.title}</span>
+                                <span className="actTime">{new Date(repo.activity.contribution.date).toLocaleDateString()}</span>
                             </div>
-                            <div>{repo.user.message}</div>
+                            <div>
+                                {repo.activity.contribution.message}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
         </div>
     )

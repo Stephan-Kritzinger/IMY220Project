@@ -10,7 +10,7 @@ const Detail = ({title, items}) => {
             </div>
             <ul>
                 {items.map(item => {
-                    return <li>{item}</li>
+                    return <li key={item}>{item}</li>
                 })}
             </ul>
         </div>

@@ -7,6 +7,10 @@ export class Project{
         return await projectCollection.insertOne(projectData);
     }
 
+    async get(){
+        const projectCollection = getProjectCollection();
+        return await projectCollection.find({}).toArray();
+    }
     async getByField(field, value){
         const projectCollection = getProjectCollection();
         return await projectCollection.findOne({[field]: value})

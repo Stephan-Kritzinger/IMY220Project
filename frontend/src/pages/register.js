@@ -32,7 +32,7 @@ const Register = () => {
         }
 
         if (form.checkValidity()) {
-            fetch("http://localhost:3000/register", {
+            fetch("http://localhost:3000/user/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -47,10 +47,10 @@ const Register = () => {
                 if (!response.ok) {
                     throw new Error("Registration failed");
                 }
-                return response
+                return response.json();
             })
             .then(data => {
-                console.log("Registration successful:", data);
+                sessionStorage.setItem("user", JSON.stringify(data.user));
                 navigate("/Feed");
             })
             .catch(error => {

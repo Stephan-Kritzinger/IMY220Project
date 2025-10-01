@@ -6,7 +6,7 @@ import "../styles/repoPreview.css"
 const Repo = ({img, title}) => {
     return(
         <div className="repo">
-            <span className="tempImage"></span>
+            <img className="tempImage" src={img} />
             <span className="repoTitle">{title}</span>
         </div>
     )
