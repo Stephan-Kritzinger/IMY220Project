@@ -1,0 +1,52 @@
+.contributer {
+    margin: 10px;
+    color: white;
+    border: 2px solid #413e3e;
+    width: 20%;
+    display: flex;
+    flex: 0 0 calc(25% - 20px);
+    box-sizing: border-box;
+    flex-direction: column;
+}
+.contributer:hover{
+    scale: 1.05;
+}
+
+.cName, .cPicture, .cStatus {
+    text-align: center;
+}
+.cStatus{
+    color: #a29a9a;
+}
+.coTitle{
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+}
+.coMessage{
+    font-size: 0.8rem;
+    color: #a29a9a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 20px;
+}
+ .cRemove{
+    color:red;
+    transform: translateX(90%);
+    opacity: 0;
+    z-index: 10;
+ }
+ .cRemove > button{
+    background-color: transparent;
+    border: 0;
+ }
+ .cRemove > button > img{
+    background-color: transparent;
+    width: 24px;
+ }
+ .contributer:hover .cRemove{
+    opacity: 1;
+ }

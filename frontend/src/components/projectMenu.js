@@ -5,11 +5,12 @@ import "../styles/projectMenu.css"
 import About from "./projectAbout.js"
 import Files from "./projectFiles.js"
 import Activity from "./projectActivity.js"
+import Contributer from "./projectContribute.js"
 
 
 
-const Menu = ({onUserClick, repo}) => {
-    const [headerState, setHeaderState] = useState("About")
+const Menu = ({onUserClick, repo, onRefresh}) => {
+    const [headerState, setHeaderState] = useState("About");
 
     return(
         <section className="projectMenu">
@@ -23,7 +24,8 @@ const Menu = ({onUserClick, repo}) => {
             <div className="projectContent">
                 {headerState == "About" && <About repo={repo}/>}
                 {headerState == "Files" && <Files files={repo.files}/>}
-                {headerState == "Activity" && <Activity repo={repo.contributers}/>}
+                {headerState == "Activity" && <Activity repo={repo.contributers} onUserClick={onUserClick}/>}
+                {headerState == "Contributors" && <Contributer repo={repo.contributers} onUserClick={onUserClick} onRefresh={onRefresh}/>}
             </div>
         </section>
     )

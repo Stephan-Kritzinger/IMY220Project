@@ -32,15 +32,23 @@
 .checkedIn {
     background-color: #83FD78;
 }
+.checkedOut{
+    background-color: #f2200c;
+}
 .profileActions{
     margin-left: auto;
-    border-radius: 20px;
-    border: 0;
-    padding: 2px 20px;
-    color: white;
-    background-color: #12B912;
+    background-color: transparent;
+    color: black;
+    display: flex;
     font-size: 1rem;
     margin-right: 7%;
+}
+.profileActions > button{
+    margin-right: 5px;
+    border-radius: 20px;
+    border: 0;
+    padding: 5px 10px;
+    cursor: pointer
 }
 .profileActions > i {
     transform: translateX(0%) !important;

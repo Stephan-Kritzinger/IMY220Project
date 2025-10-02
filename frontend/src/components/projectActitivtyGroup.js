@@ -5,14 +5,14 @@ import "../styles/projectActivityGroup.css"
 import Activity from "./activity"
 
 
-const Group = ({date, activities}) => {
+const Group = ({date, activities, onUserClick}) => {
     return(
         <div className="actGroup">
             <div className="groupDate">{date}</div>
             <div className="seperator"></div>
             <div className="acts">
                 {activities.map(act => {
-                    return <><Activity act={act} /><div className="seperator"></div></>
+                    return <><Activity act={act} onUserClick={onUserClick}/><div className="seperator"></div></>
                 })}
             </div>
         </div>

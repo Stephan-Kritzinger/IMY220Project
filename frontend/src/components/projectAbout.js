@@ -22,7 +22,7 @@ const About = ({repo}) => {
             <div className="aboutLanguages">
                 <h3>Languages</h3>
                 {repo.details.languages.map(l => {
-                    return <span className="languageBadge">{l}</span>
+                    return <span className="languageBadge" key={l}>{l}</span>
                 })}
             </div>
         </>

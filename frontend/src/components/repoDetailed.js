@@ -3,9 +3,6 @@ import { Link } from "react-router"
 import "../styles/repoDetailed.css"
 
 const Repo = ({repo, onUserClick}) => {
-    const decodeImages = () => {
-
-    }
     return(
         <div className="repository">
             <div className="profileImage">

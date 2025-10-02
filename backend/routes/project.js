@@ -34,7 +34,8 @@ router.get("/:id", async (req, res) => {
                 id: person._id,
                 username: person.username,
                 picture: person.picture,
-                contributions: c.contributions || []
+                contributions: c.contributions || [],
+                removed: c.removed || false
             }
         })
     );

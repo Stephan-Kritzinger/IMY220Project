@@ -68,7 +68,6 @@ router.post("/login", express.json(), async(req, res) => {
     const password = await user.getPassword(cursor._id);
 
     if(password.password != req.body.password){
-        console.log(cursor.password)
         return res.status(401).json({
             message: "Login failed"
         })

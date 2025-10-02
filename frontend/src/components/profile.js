@@ -46,7 +46,6 @@ const Profile = ({user, onClose, onSwitch}) => {
             return response.json();
         })
         .then(data => {
-            console.log(data);
             setUser(data.user);
         })
         .catch(err => {

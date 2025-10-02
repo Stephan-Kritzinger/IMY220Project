@@ -1,0 +1,15 @@
+.conts {
+    display: flex;
+    flex-wrap: wrap;
+}
+.cAdd {
+    align-items: center !important;
+    flex-direction: column;
+    justify-content: center;
+}
+.cAdd > img{
+    background-color: #1c1c1c;
+}
+.cAdd > span {
+    margin-right: 0;
+}
