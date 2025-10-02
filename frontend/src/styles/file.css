@@ -22,8 +22,12 @@
     align-items: center;
     width: 100;
 }
-.fileType{
+.fileType > img{
     margin-right: 5px;
+    border-radius: 0 !important;
+    padding: 0;
+    margin: 0;
+    background-color: #222222;
 }
 .fileName{
     margin-right: 100px;

@@ -1,0 +1,43 @@
+.addC{
+    color:white;
+    text-align: center;
+}
+
+.addOverview{
+    display:flex !important;
+    flex-direction: column !important;
+}
+
+span.addS{
+    text-align: center;
+    font-size: 1rem;
+}
+.selectAdd{
+    display: flex;
+    width: 20%;
+    align-self: center;
+}
+.selectAdd > i {
+    color: white;
+    transform: translateY(40%);
+}
+.selectAddWrapper{
+    align-self:center;
+    margin-top: 100px;
+}
+.addDropdownList{
+    background-color: #2c2a2a;
+    padding: 5px;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 2px solid #413E3E;
+}
+.addItem{
+    padding: 8px;
+    cursor: pointer;
+}
+.addButton{
+    width: 30%;
+    align-self: center;
+}

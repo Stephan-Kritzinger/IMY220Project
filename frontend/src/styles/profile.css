@@ -48,12 +48,24 @@
 }
 .profileFRequest{
     border-radius: 20px;
-    background-color: #C0FFB3;
     padding: 5px 15px;
     border: 0;
+    cursor: pointer;
     align-self: center;
     margin-right: 32px;
     margin-bottom: 30px !important;
+}
+.fSend{
+    background-color: #C0FFB3;
+}
+.fRemove{
+    background-color: #FF252F;
+}
+.fPending{
+    background-color: #A6A6A6;;
+}
+.fIncoming{
+    background-color: #1E80FF;
 }
 .profileDetails{
     margin-top: 20px;
@@ -90,4 +102,7 @@
 }
 .repo, .profile{
     box-sizing: border-box;
+}
+.fillerMessage{
+    color: white;
 }

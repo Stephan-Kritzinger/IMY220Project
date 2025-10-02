@@ -2,8 +2,15 @@ import express from "express"
 import path from "path"
 import cors from "cors"
 const app = express();
-const port = 3000;
+import "regenerator-runtime/runtime"
 
+//Routes
+import usersRouter from "./routes/users.js"
+import profileRouter from "./routes/profile.js"
+import projectRouter from "./routes/project.js"
+app.use("/user", usersRouter)
+app.use("/profile", profileRouter);
+app.use("/project", projectRouter);
 app.use(cors());
 app.use(express.static('frontend/public'));
 
@@ -18,6 +25,5 @@ app.post('/register', (req, res) => {
     res.status(200).send("Api key will be located here");
 })
 
-app.listen(port, () => {
-    console.log(`Listening on localhost:${port}`);
-})
+
+export default app;
