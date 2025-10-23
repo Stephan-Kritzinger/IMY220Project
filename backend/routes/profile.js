@@ -18,35 +18,6 @@ router.post("/", express.json(), async (req, res) => {
         });
     }
 
-    //Suggested format that will be built
-    /*
-        {
-            _id:
-            username:
-            email:
-            joindate:
-            picture:
-            details: [
-                {
-                    section:
-                    items: ["", ""]
-                },
-                {
-                    section:
-                    items: ["", ""]
-                }
-            ]
-            friends: {
-                mutual: [array of ids]
-                incoming: [array of ids]
-                outgoing: []
-            }
-            repositories: [array of ids]
-        }
-    */
-
-    //The friends tab will be sanitised to a single field called friendStatus to determine how the friend request button should render.
-
     const mutuals = currentUser.friends.mutual.filter(user => cursor.friends.mutual.includes(user) && user !== currentUser._id.toString() && user !== cursor._id.toString());
 
     let friendArray = await Promise.all(

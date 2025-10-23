@@ -1,3 +1,14 @@
 Splash Page
     Unregistered Users can only see the splash page
         -Implemented with auth.js and RequireAuth using the existence of session storage to confirm whether they exist or not.
+    Splash Page clearly indicates the purpose of the website
+        -Could use more work conveying the point of the website
+    Contains a log in and registration form
+        -Contains links that redirect to the respective pages
+    All Form fields working
+        -If the label is clicked it will focus the correct input
+    No parallex
+        -Would take too much work
+
+Profile Page
+    

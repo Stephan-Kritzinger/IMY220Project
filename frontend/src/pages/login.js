@@ -44,7 +44,8 @@ const Login = () => {
             return response.json();
         })
         .then(data => {
-            sessionStorage.setItem("user", JSON.stringify(data.user));
+            const user = data.user;
+            sessionStorage.setItem("user_id", user.id);
             navigate("/Feed")
         })
         .catch(error => {

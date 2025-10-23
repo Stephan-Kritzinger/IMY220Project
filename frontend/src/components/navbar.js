@@ -4,7 +4,7 @@ import "../styles/navbar.css"
 import Logo from "./logo.js"
 import Search from "./search.js"
 
-const Navbar = () => {
+const Navbar = ({userRefresh, user}) => {
     return(
         <nav>
             <Logo />
