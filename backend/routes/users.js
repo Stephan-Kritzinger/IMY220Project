@@ -1,8 +1,11 @@
 import express from "express"
 import { User } from "../crud/usersCollection.js"
+import multer from "multer"
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 const user = new User();
+const upload = new multer();
 
 //Functions
 router.post("/register", express.json(), async (req, res) => {
@@ -78,6 +81,26 @@ router.post("/login", express.json(), async(req, res) => {
             id: cursor._id
         }
     })
+})
+
+router.post("/update", upload.single("img"), async(req, res) => {
+    const cursor = await user.getByField("_id", ObjectId.createFromHexString(req.body.id));
+
+    if(!cursor){
+        return res.status(404).json({
+            message: "user not found"
+        });
+    }
+
+    const b64Image = req.file.buffer.toString("base64")
+
+    await user.update(ObjectId.createFromHexString(req.body.id), {
+        $set: {
+            img: b64Image
+        }
+    });
+
+    res.status(200).json({message: "User Data Updated"});
 })
 
 export default router;

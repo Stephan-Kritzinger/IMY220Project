@@ -10,33 +10,58 @@ import Friend from "./profilePreview.js"
 const ProfileManager = ({user, onClose}) => {
     const [activeUser, setActiveUser] = useState(user);
 
+    const switchUser = (newId) => {
+        fetch("http://localhost:3000/profile/", {
+            method: "Post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: newId,
+                    curr_id: sessionStorage.getItem("user_id")
+                })
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error("Error syncing user data");
+            }
+            return response.json();
+        })
+        .then(data => {
+            setActiveUser(data.user);
+        })
+        .catch(err => {
+            console.error(err.message);
+        })
+    }
+
     const close = () => {
         setActiveUser(null);
         onClose();
     }
 
     return (
-        <Profile user={activeUser} onClose={() => close()} onSwitch={(newId) => setActiveUser(newId)} />
+        <Profile user={activeUser} onClose={() => close()} onSwitch={(newId) => switchUser(newId.id)} />
     )
 }
 
 const Profile = ({user, onClose, onSwitch}) => {
     const [isFriendSelected, setIsFriendSelected] = useState(true);
-    const [selUser, setUser] = useState({})
+    const [selUser, setUser] = useState(null)
     const [refresh, setRefresh] = useState(0);
     const [currentUser, setCurrentUser] = useState(() => {
-        return JSON.parse(sessionStorage.getItem("user"));
+        return sessionStorage.getItem("user_id");
     });
-    useEffect(() => {
-        
+    const [isDragging, setIsDragging] = useState(false);
+    useEffect(() => {      
         fetch("http://localhost:3000/profile/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                id: user,
-                curr_id: currentUser._id
+                id: user._id,
+                curr_id: currentUser
             })
         })
         .then(response => {
@@ -46,6 +71,7 @@ const Profile = ({user, onClose, onSwitch}) => {
             return response.json();
         })
         .then(data => {
+            console.log(data.user);
             setUser(data.user);
         })
         .catch(err => {
@@ -61,7 +87,7 @@ const Profile = ({user, onClose, onSwitch}) => {
             },
             body: JSON.stringify({
                 id: selUser._id,
-                curr_id: currentUser._id
+                curr_id: currentUser
             })
         })
     .   then(response => {
@@ -71,15 +97,6 @@ const Profile = ({user, onClose, onSwitch}) => {
             return response.json();
         })
         .then(data => {
-            const updatedUser = {
-                ...currentUser,
-                friends: {
-                    ...currentUser.friends,
-                    mutual: currentUser.friends.mutual.filter(id => id !== selUser._id)
-                }
-            };
-            setCurrentUser(updatedUser);
-            sessionStorage.setItem("user", JSON.stringify(updatedUser))
             setRefresh(prev => prev + 1);
         })
         .catch(err => {
@@ -95,7 +112,7 @@ const Profile = ({user, onClose, onSwitch}) => {
             },
             body: JSON.stringify({
                 id: selUser._id,
-                curr_id: currentUser._id
+                curr_id: currentUser
             })
         })
     .   then(response => {
@@ -105,19 +122,6 @@ const Profile = ({user, onClose, onSwitch}) => {
             return response.json();
         })
         .then(data => {
-            const updatedUser = {
-                ...currentUser,
-                friends: {
-                    ...currentUser.friends,
-                    outgoing: [
-                        ...(currentUser.friends?.outgoing || []),
-                        selUser._id
-                    ],
-                }
-            };
-
-            setCurrentUser(updatedUser);
-            sessionStorage.setItem("user", JSON.stringify(updatedUser));
             setRefresh(prev => prev + 1);
         })
         .catch(err => {
@@ -133,7 +137,7 @@ const Profile = ({user, onClose, onSwitch}) => {
             },
             body: JSON.stringify({
                 id: selUser._id,
-                curr_id: currentUser._id
+                curr_id: currentUser
             })
         })
     .   then(response => {
@@ -143,20 +147,6 @@ const Profile = ({user, onClose, onSwitch}) => {
             return response.json();
         })
         .then(data => {
-              const updatedUser = {
-                ...currentUser,
-                friends: {
-                ...currentUser.friends,
-                incoming: (currentUser.friends?.incoming || []).filter(id => id !== selUser._id),
-                mutual: [
-                    ...(currentUser.friends?.mutual || []),
-                    selUser._id
-                ]
-                }
-            };
-
-            setCurrentUser(updatedUser);
-            sessionStorage.setItem("user", JSON.stringify(updatedUser));
             setRefresh(prev => prev + 1);
         })
         .catch(err => {
@@ -164,24 +154,78 @@ const Profile = ({user, onClose, onSwitch}) => {
         })
     }
 
+    const changeProfilePicture = (e) => {
+        console.log(selUser);
+        const file = e.target.files[0];
+        if(!file) return;
+        
+        const formData = new FormData();
+        formData.append("id", selUser._id);
+        formData.append("img", file);
+        fetch("http://localhost:3000/user/update", {
+            method: "Post",
+            body: formData
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error("Failed to update user image")
+            }
+            setRefresh(prev => prev + 1);
+            return;
+        })
+        .catch(err => {
+            console.error(err.message)
+        })
+    }
+
     return ReactDOM.createPortal(
         <div className="profileOverlay" onClick={onClose}>
+            {selUser && 
             <div className="profileOverview" onClick={(e) => e.stopPropagation()}>
                 <div className="profileBlurb" >
                     <div className="profileDetails">
-                        <span className="tempProfileImg"></span>
+                        <img className={`tempProfileImg ${isDragging ? "dragging" : ""}`} src={selUser.img ? `data:image/png;base64,${selUser.img}` : "./images/user.svg"}
+                        onDragOver={(e) => {
+                            if (selUser._id !== currentUser) return;
+                            e.preventDefault();
+                            setIsDragging(true);
+                        }}
+                        onDragLeave={(e) => {
+                            if (selUser._id !== currentUser) return;
+                            setIsDragging(false)
+                        }}
+                        onDrop={(e) => {
+                            if (selUser._id !== currentUser) return;
+                            e.preventDefault();
+                            setIsDragging(false);
+                            const file = e.dataTransfer.files[0];
+                            if(file && file.type.startsWith("image/")){
+                                changeProfilePicture({target: {files: [file]}})
+                            }
+                            else{
+                                console.log("file not formatted");
+                                console.log(e.dataTransfer)
+                            }
+                        }}></img>
                         <span className="profileName">{selUser?.username || "Loading"}</span>
                         <span className="profileJoin">{"Joined " + new Date(selUser?.joinDate).toLocaleDateString('en-GB', {day: '2-digit', month: 'long', year: 'numeric'}) || "Loading"}</span>
-                        {selUser._id !== currentUser._id && (
-                            currentUser.friends?.outgoing?.includes(selUser._id) ? (
+                        {selUser._id !== currentUser ? (
+                            selUser.friends?.incoming?.includes(currentUser) ? (
                                 <button className="profileFRequest fPending">Friend Request Sent</button>
-                            ) : currentUser.friends?.incoming?.includes(selUser._id) ? (
+                            ) : selUser.friends?.outgoing?.includes(currentUser) ? (
                                 <button className="profileFRequest fIncoming" onClick={acceptFriend}>Accept Friend Request</button>
-                            ) : currentUser.friends?.mutual?.includes(selUser._id) ? (
+                            ) : selUser.friends?.mutual?.includes(currentUser) ? (
                                 <button className="profileFRequest fRemove" onClick={removeFriend}>Remove Friend</button>
                             ) : (
                                 <button className="profileFRequest fSend" onClick={addFriend}>Send Friend Request</button>
                             )
+                        ) : 
+                        (
+                            <>
+                                <label htmlFor="profileUpload" className="profileImgUpload">Upload Profile Image
+                                    (Or Drag&Drop on Image)</label>
+                                <input type="file" id="profileUpload" style={{display: "none"}} onChange={(e) => changeProfilePicture(e)} accept="image/*" />
+                            </>
                         )}
                     </div>
                     <div className="seperator"></div>
@@ -200,16 +244,16 @@ const Profile = ({user, onClose, onSwitch}) => {
                 </div>
                 <div className="profileHeader">
                     <div className="profileOptions">
-                        <span className={isFriendSelected ? "profileActive" : ""} onClick={() => setIsFriendSelected(true)}>{selUser._id !== currentUser._id ? "Mutual " : ""}Friends</span>
+                        <span className={isFriendSelected ? "profileActive" : ""} onClick={() => setIsFriendSelected(true)}>{selUser._id !== currentUser ? "Mutual " : ""}Friends</span>
                         <span className={isFriendSelected ? "" : "profileActive"} onClick={() => setIsFriendSelected(false)}>Owned Repositories</span>
                     </div>
                     <div className="seperator"></div>
                     <div className="profileOwned">
-                        {(currentUser._id === selUser._id || currentUser.friends?.mutual?.includes(selUser._id)) ? (
+                        {(currentUser === selUser._id || selUser.friends.mutual.includes(currentUser)) ? (
                             isFriendSelected ? (
                             <div className="">
-                                {selUser.mutuals.map(friend => (
-                                    <Friend img="null" title={friend.username} key={friend.id} onClick={() => onSwitch(friend.id)}/>
+                                {selUser.mutuals.filter(friend => friend.id !== currentUser).map(friend => (
+                                    <Friend img={friend.img} title={friend.username} key={friend.id} onClick={() => onSwitch(friend)}/>
                                 ))}
                             </div>
                             ) : (
@@ -226,7 +270,7 @@ const Profile = ({user, onClose, onSwitch}) => {
                     
                 </div>
                 
-            </div>
+            </div>}
         </div>,
         document.body
     );

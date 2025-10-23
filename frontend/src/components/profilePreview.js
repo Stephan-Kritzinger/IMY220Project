@@ -6,7 +6,7 @@ import "../styles/profilePreview.css"
 const Profile = ({img, title, onClick}) => {
     return(
         <div className="profile" onClick={onClick}>
-            <span className="tempImage"></span>
+            <img className="tempImage" src={img ? `data:image/png;base64,${img}` : "./images/user.svg"}></img>
             <span className="profName">{title}</span>
         </div>
     )

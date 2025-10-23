@@ -4,7 +4,7 @@ import "../styles/navbar.css"
 import Logo from "./logo.js"
 import Search from "./search.js"
 
-const Navbar = ({userRefresh, user}) => {
+const Navbar = ({userRefresh, user, onUserClick}) => {
     return(
         <nav>
             <Logo />
@@ -12,7 +12,7 @@ const Navbar = ({userRefresh, user}) => {
             <span className="active">Feed</span>
             <span>Friends</span>
             <span>Settings</span>
-            <img src="./images/user.svg"></img>
+            <img src={user.img ? `data:image/png;base64,${user.img}` : "./images/user.svg"} onClick={() => onUserClick(user)}></img>
         </nav>
     )
 }

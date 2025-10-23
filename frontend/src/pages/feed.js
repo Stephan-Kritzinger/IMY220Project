@@ -38,7 +38,7 @@ const Feed = ({ onUserClick }) => {
         <>
             {user && 
             <>
-                <Navbar userRefresh={setRefreshUser} user={user}/>
+                <Navbar userRefresh={setRefreshUser} user={user} onUserClick={onUserClick}/>
                 <main id="feed">
                     <h1 className="pageTitle">FEED</h1>
                     <Menu onUserClick={onUserClick} userRefresh={setRefreshUser} user={user}/>

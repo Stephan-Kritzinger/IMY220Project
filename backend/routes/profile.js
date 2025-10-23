@@ -18,7 +18,14 @@ router.post("/", express.json(), async (req, res) => {
         });
     }
 
-    const mutuals = currentUser.friends.mutual.filter(user => cursor.friends.mutual.includes(user) && user !== currentUser._id.toString() && user !== cursor._id.toString());
+    const mutuals = currentUser.friends.mutual.filter(user =>
+        cursor.friends.mutual.includes(user)
+    );
+
+    if (cursor.friends.mutual.includes(currentUser._id.toString()) && currentUser._id.toString() !== cursor._id.toString()) {
+        mutuals.push(currentUser._id.toString());
+    }
+
 
     let friendArray = await Promise.all(
         mutuals.map(async friend => {
@@ -26,7 +33,7 @@ router.post("/", express.json(), async (req, res) => {
             return {
                 id: person._id,
                 username: person.username,
-                picture: person.picture
+                img: person.img
             }
         })
     );
@@ -48,9 +55,10 @@ router.post("/", express.json(), async (req, res) => {
             username: cursor.username, 
             email: cursor.email,
             joinDate: cursor.joinDate,
-            picture: cursor.picture,
             details: cursor.details,
             mutuals: friendArray,
+            friends: cursor.friends,
+            img: cursor.img,
             repositories: repos
     }
 

@@ -23,7 +23,7 @@ const Repo = ({repo, onUserClick}) => {
                         
                         <div className="actContent">
                             <div className="actHeader">
-                                <span className="actUser" onClick={() => onUserClick(repo.activity.uid)}>{repo.activity.contribution.title}</span>
+                                <span className="actUser" onClick={() => onUserClick({_id: repo.activity.uid})}>{repo.activity.contribution.title}</span>
                                 <span className="actTime">{new Date(repo.activity.contribution.date).toLocaleDateString()}</span>
                             </div>
                             <div>
