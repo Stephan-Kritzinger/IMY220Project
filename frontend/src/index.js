@@ -9,6 +9,7 @@ import Login from "./pages/login.js"
 import Feed from "./pages/feed.js"
 import Profile from "./components/profile.js"
 import Project from "./pages/project.js"
+import RequireAuth from "./components/auth.js"
 
 const root = document.getElementById("root");
 
@@ -25,8 +26,16 @@ const App = () => {
                     <Route path="/" element={<Splash />} />
                     <Route path="/Register" element={<Register />} />
                     <Route path="/Login" element={<Login />} />
-                    <Route path="/Feed" element={<Feed onUserClick={handleUserClick}/>} />
-                    <Route path="/Projects/:projectId?" element={<Project onUserClick={handleUserClick} />} />
+                    <Route path="/Feed" element={
+                        <RequireAuth>
+                            <Feed onUserClick={handleUserClick}/> 
+                        </RequireAuth>}
+                    />
+                    <Route path="/Projects/:projectId?" element={
+                        <RequireAuth>
+                            <Project onUserClick={handleUserClick} />
+                        </RequireAuth>}
+                    />
                 </Routes>
             </BrowserRouter>
              {selectedUser && (
