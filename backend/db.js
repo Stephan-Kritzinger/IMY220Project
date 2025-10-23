@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb"
 
-const uri = "mongodb+srv://project-user:gjAChClcB0twpY4R@imy220.lclw1nh.mongodb.net/?retryWrites=true&w=majority&appName=IMY220"
+const uri = "mongodb+srv://project-user:Z1TbwYCAasA5KvX1@imy220.lclw1nh.mongodb.net/?retryWrites=true&w=majority&appName=IMY220"
 const client = new MongoClient(uri);
 
 //Collection defs
