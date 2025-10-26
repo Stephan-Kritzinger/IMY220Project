@@ -13,13 +13,13 @@ const upload = new multer();
 router.get("/allRepos", async (req, res) => {
     const cursor = await project.get();
 
-    return res.status(200).json(cursor); 
+    return res.status(200).json(cursor);
 })
 
 router.get("/:id", async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.params.id));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
@@ -39,7 +39,7 @@ router.get("/:id", async (req, res) => {
             }
         })
     );
-    let {contributers, ...p} = cursor;
+    let { contributers, ...p } = cursor;
     p.contributers = contributersPlain;
 
     return res.status(200).json({
@@ -48,11 +48,11 @@ router.get("/:id", async (req, res) => {
     })
 })
 
-router.post("/create", upload.fields([{name: 'zipfile', maxCount:1}, {name: 'image', maxCount: 1}]),express.json(), async (req, res) => {
+router.post("/create", upload.fields([{ name: 'zipfile', maxCount: 1 }, { name: 'image', maxCount: 1 }]),  async (req, res) => {
 
     const details = JSON.parse(req.body.details);
-    let contributers = JSON.parse(req.body.contributers);
-    contributers.push({uid: req.body.uid});
+    let contributers = [];
+    contributers.push({ uid: req.body.uid });
 
     const image = req.files.image[0];
     const imageBase64 = image ? `data:${image.mimetype};base64,${image.buffer.toString('base64')}` : null;
@@ -68,17 +68,49 @@ router.post("/create", upload.fields([{name: 'zipfile', maxCount:1}, {name: 'ima
         data: `data:application/octet-stream;base64,${entry.getData().toString('base64')}`
     }));
 
+    //User did not submit languages auto-generate them
+    if (details.languages.length == 0) {
+        const extensions = new Set();
+
+        zipFiles.forEach(f => {
+            if(!f.isDirectory){
+                const parts = f.entryName.split('.');
+                if(parts.length > 1){
+                    const ext = parts.pop().toLowerCase();
+                    extensions.add(ext);
+                }
+            }
+        })
+        const languageMap = {
+            js: "JavaScript",
+            py: "Python",
+            java: "Java",
+            cpp: "C++",
+            c: "C",
+            ts: "TypeScript",
+            rb: "Ruby",
+            php: "PHP",
+            html: "HTML",
+            css: "CSS",
+            go: "Go",
+            rs: "Rust",
+            swift: "Swift"
+        }
+
+        const detectedLanguages = Array.from(extensions).map(ext => languageMap[ext] || ext);
+        details.languages = detectedLanguages;
+    }
+
     const repo = {
         details: {
             name: details.name,
             description: details.description,
             version: details.version,
             languages: details.languages,
-            type: details.type,
-            created: new Date(details.created),
+            created: new Date(),
             image: imageBase64,
             status: true,
-            checkedOutBy: null 
+            checkedOutBy: null
         },
         files: files,
         contributers: contributers
@@ -88,9 +120,9 @@ router.post("/create", upload.fields([{name: 'zipfile', maxCount:1}, {name: 'ima
 
     const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
 
-    if(!u.repositories){
+    if (!u.repositories) {
         await user.update(ObjectId.createFromHexString(req.body.uid), {
-            $set : { repositories: []}
+            $set: { repositories: [] }
         })
     }
 
@@ -109,7 +141,7 @@ router.post("/create", upload.fields([{name: 'zipfile', maxCount:1}, {name: 'ima
 router.get("/download/:id", async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.params.id));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
@@ -139,19 +171,19 @@ router.get("/download/:id", async (req, res) => {
 router.post("/checkout", express.json(), async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
     }
 
-    if(cursor.details.status === false){
+    if (cursor.details.status === false) {
         return res.status(409).json({
             message: "project is already checked out"
         })
     }
 
-    if(!cursor.contributers.some(c => c.uid === req.body.uid && c.removed !== true)){
+    if (!cursor.contributers.some(c => c.uid === req.body.uid && c.removed !== true)) {
         return res.status(403).json({
             message: "User is not registered as a contributer on this project"
         })
@@ -202,19 +234,19 @@ router.post("/checkout", express.json(), async (req, res) => {
 router.post("/checkin", express.json(), upload.single('zipfile'), async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
     }
 
-    if(cursor.details.status === true){
+    if (cursor.details.status === true) {
         return res.status(409).json({
             message: "project is already checked in"
         })
     }
 
-    if(cursor.details.checkedOutBy !== req.body.uid){
+    if (cursor.details.checkedOutBy !== req.body.uid) {
         return res.status(403).json({
             message: "project is checked out by another user."
         })
@@ -236,11 +268,11 @@ router.post("/checkin", express.json(), upload.single('zipfile'), async (req, re
 
     files.map(f => {
         const index = updatedFiles.findIndex(file => file.name === f.name);
-        if(index !== -1){
+        if (index !== -1) {
             updatedFiles[index].modified = f.modified;
             updatedFiles[index].data = f.data;
         }
-        else{
+        else {
             updatedFiles.push(f);
         }
     });
@@ -275,14 +307,14 @@ router.post("/checkin", express.json(), upload.single('zipfile'), async (req, re
 router.post("/update", upload.single('image'), express.json(), async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
     }
 
     const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
-    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+    if (!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)) {
         return res.status(403).json({
             message: "User is not the owner of this repository"
         })
@@ -292,15 +324,15 @@ router.post("/update", upload.single('image'), express.json(), async (req, res) 
     const imageBase64 = image ? `data:${image.mimetype};base64,${image.buffer.toString('base64')}` : null;
 
     const updateFields = {};
-    if(req.body.name) updateFields["details.name"] = req.body.name;
-    if(req.body.description) updateFields["details.description"] = req.body.description;
-    if(imageBase64) updateFields["details.image"] = imageBase64;
-    if(req.body.type) updateFields["details.type"] = req.body.type;
+    if (req.body.name) updateFields["details.name"] = req.body.name;
+    if (req.body.description) updateFields["details.description"] = req.body.description;
+    if (imageBase64) updateFields["details.image"] = imageBase64;
+    if (req.body.type) updateFields["details.type"] = req.body.type;
 
     await project.update(ObjectId.createFromHexString(req.body.pid), {
         $set: updateFields
     });
-    
+
     return res.status(200).json({
         message: "Repo successfully updated"
     });
@@ -309,32 +341,32 @@ router.post("/update", upload.single('image'), express.json(), async (req, res) 
 router.post("/remove", express.json(), async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
     }
 
     const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
-    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+    if (!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)) {
         return res.status(403).json({
             message: "User is not the owner of this repository"
         })
     }
 
-    if(req.body.uid == req.body.removeId){
+    if (req.body.uid == req.body.removeId) {
         return res.status(409).json({
             message: "Owner can not remove themselves, transfer ownership instead."
         })
     }
 
-    if(cursor.details.checkedOutBy === req.body.removeId){
+    if (cursor.details.checkedOutBy === req.body.removeId) {
         return res.status(409).json({
             message: "This user currently has the project checked out, ensure the project is checked in before removing them."
         })
     }
 
-    if(!cursor.contributers.some(c => c.uid === req.body.removeId)){
+    if (!cursor.contributers.some(c => c.uid === req.body.removeId)) {
         return res.status(404).json({
             message: "user is not part of the project"
         })
@@ -354,26 +386,26 @@ router.post("/remove", express.json(), async (req, res) => {
 router.post("/relinquish", express.json(), async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
     }
 
     const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
-    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+    if (!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)) {
         return res.status(403).json({
             message: "User is not the owner of this repository"
         })
     }
 
-    if(req.body.uid == req.body.newOwnerId){
+    if (req.body.uid == req.body.newOwnerId) {
         return res.status(409).json({
             message: "User is already the owner."
         })
     }
 
-    if(!cursor.contributers.some(c => c.uid === req.body.newOwnerId)){
+    if (!cursor.contributers.some(c => c.uid === req.body.newOwnerId)) {
         return res.status(404).json({
             message: "user is not part of the project"
         })
@@ -386,9 +418,9 @@ router.post("/relinquish", express.json(), async (req, res) => {
     })
 
     const n = await user.getByField("_id", ObjectId.createFromHexString(req.body.newOwnerId));
-    if(!n.repositories){
+    if (!n.repositories) {
         await user.update(ObjectId.createFromHexString(req.body.newOwnerId), {
-            $set : { repositories: []}
+            $set: { repositories: [] }
         })
     }
 
@@ -406,14 +438,14 @@ router.post("/relinquish", express.json(), async (req, res) => {
 router.post("/delete", express.json(), async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
     }
 
     const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
-    if(!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)){
+    if (!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)) {
         return res.status(403).json({
             message: "User is not the owner of this repository"
         })
@@ -425,7 +457,7 @@ router.post("/delete", express.json(), async (req, res) => {
             repositories: req.body.pid
         }
     })
-    
+
     return res.status(200).json({
         message: "Project deleted successfully"
     })
@@ -434,7 +466,7 @@ router.post("/delete", express.json(), async (req, res) => {
 router.post("/add", express.json(), async (req, res) => {
     const cursor = await project.getByField("_id", ObjectId.createFromHexString(req.body.pid));
 
-    if(!cursor){
+    if (!cursor) {
         return res.status(404).json({
             message: "project with id not found"
         });
@@ -463,7 +495,7 @@ router.post("/add", express.json(), async (req, res) => {
 
     await project.update(ObjectId.createFromHexString(req.body.pid), {
         $addToSet: {
-            contributers: {uid: req.body.newId}
+            contributers: { uid: req.body.newId }
         }
     })
 

@@ -19,7 +19,6 @@ const Menu = ({onUserClick, userRefresh, user}) => {
         return response.json();
       })
       .then(data => {
-        console.log(data);
         data.forEach(repo => {
           let mostRecent = null;
           let author = null;
@@ -58,7 +57,7 @@ const Menu = ({onUserClick, userRefresh, user}) => {
             </div>
             <div className="seperator"></div>
             <div className="feedRepos">
-                {isFriendsSelected && repos.filter(repo => repo.contributers?.some(c => !c.removed && user.mutuals.some(mutual => mutual.id === c.uid))).map(repo => {
+                {isFriendsSelected && repos.filter(repo => repo.contributers?.some(c => !c.removed && user.mutuals.some(mutual => mutual.id === c.uid)) || user.repositories?.some(r => r._id === repo._id)).map(repo => {
                     return <Repo repo={repo} onUserClick={onUserClick} key={repo._id}/>
                 })}
                 {!isFriendsSelected && repos.map(repo => {

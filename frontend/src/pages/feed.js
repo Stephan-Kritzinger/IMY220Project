@@ -5,7 +5,7 @@ import "../styles/feed.css"
 import Navbar from "../components/navbar"
 import Menu from "../components/feedMenu.js"
 
-const Feed = ({ onUserClick }) => {
+const Feed = ({ onUserClick, setCreate }) => {
     const [user, setUser] = useState(null);
     const [refreshUser, setRefreshUser] = useState(0)
 
@@ -37,7 +37,7 @@ const Feed = ({ onUserClick }) => {
         <>
             {user && 
             <>
-                <Navbar userRefresh={setRefreshUser} user={user} onUserClick={onUserClick}/>
+                <Navbar userRefresh={setRefreshUser} user={user} onUserClick={onUserClick} setCreate={setCreate}/>
                 <main id="feed">
                     <h1 className="pageTitle">FEED</h1>
                     <Menu onUserClick={onUserClick} userRefresh={setRefreshUser} user={user}/>

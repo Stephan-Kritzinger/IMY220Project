@@ -6,7 +6,7 @@ import Navbar from "../components/navbar"
 import Menu from "../components/projectMenu.js"
 import CheckIn from "../components/checkin.js"
 
-const Project = ({ onUserClick }) => {
+const Project = ({ onUserClick, setCreate }) => {
     const [repo, setRepo] = useState(null)
     const [showCheckIn, setShowCheckIn] = useState(false);
     const [user, setUser] = useState(null);
@@ -122,7 +122,7 @@ const Project = ({ onUserClick }) => {
         <>
             {user &&
                 <>
-                    <Navbar userRefresh={setRefreshUser} user={user} onUserClick={onUserClick} />
+                    <Navbar userRefresh={setRefreshUser} user={user} onUserClick={onUserClick} setCreate={setCreate}/>
                     <main id="project">
                         {repo == null ? (
                             <div className="loading">Loading project details...</div>
