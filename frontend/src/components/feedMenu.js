@@ -19,30 +19,30 @@ const Menu = ({onUserClick, userRefresh, user}) => {
         return response.json();
       })
       .then(data => {
-
+        console.log(data);
         data.forEach(repo => {
           let mostRecent = null;
           let author = null;
           repo.contributers.map(c => {
-          if(Array.isArray(c.contributions)){
-            c.contributions.map(cn => {
-              if(!mostRecent || new Date(cn.timestamp) > new Date(mostRecent.timestamp)) {
-                mostRecent = cn;
-                author = c.uid
-              }
-            })
-          }
+            if (Array.isArray(c.contributions)) {
+              c.contributions.map(cn => {
+                if (!mostRecent || new Date(cn.timestamp) > new Date(mostRecent.timestamp)) {
+                  mostRecent = cn;
+                  author = c.uid
+                }
+              })
+            }
           })
-
-          //Figure out loading profile images here, probably at end point when I get to editting profiles.
-
           repo.activity = {
             uid: author,
             contribution: mostRecent
           }
         })
-        
-        setRepos(data)
+
+        const sorted = data.sort((a,b) => 
+          new Date(b.details.created) - new Date(a.details.created)  
+        )
+        setRepos(sorted)
       })
       .catch(err => {
         console.error(err.message)

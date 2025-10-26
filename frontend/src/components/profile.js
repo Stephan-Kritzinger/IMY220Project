@@ -86,9 +86,8 @@ const Profile = ({user, onClose, onSwitch}) => {
         })
         .then(data => {
             const filtered = data.filter(r =>
-                r.contributers?.some(c => c.uid === user._id)
+                r.contributers?.some(c => c.uid === user._id && !c.removed)
             );
-            console.log(filtered);
             setContributions(filtered);
         })
         .catch(err => {
@@ -172,7 +171,6 @@ const Profile = ({user, onClose, onSwitch}) => {
     }
 
     const changeProfilePicture = (e) => {
-        console.log(selUser);
         const file = e.target.files[0];
         if(!file) return;
         
@@ -218,10 +216,6 @@ const Profile = ({user, onClose, onSwitch}) => {
                             const file = e.dataTransfer.files[0];
                             if(file && file.type.startsWith("image/")){
                                 changeProfilePicture({target: {files: [file]}})
-                            }
-                            else{
-                                console.log("file not formatted");
-                                console.log(e.dataTransfer)
                             }
                         }}></img>
                         <span className="profileName">{selUser?.username || "Loading"}</span>

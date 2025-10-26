@@ -17,10 +17,6 @@ const Repo = ({repo, onUserClick}) => {
                 <div className="rec"> 
                     <span className="recTitle">Recent Activity</span>
                     <div className="recAct">
-                        <div className="avatarImage">
-                            <span className="avatarImage"></span>
-                        </div>
-                        
                         <div className="actContent">
                             <div className="actHeader">
                                 <span className="actUser" onClick={() => onUserClick({_id: repo.activity.uid})}>{repo.activity.contribution.title}</span>

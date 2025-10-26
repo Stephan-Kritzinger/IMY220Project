@@ -25,7 +25,6 @@ const Project =({onUserClick}) => {
         })
         .then(data => {
             setRepo(data.project)
-            console.log(repo)
         })
         .catch(err => {
             console.error(err.message);

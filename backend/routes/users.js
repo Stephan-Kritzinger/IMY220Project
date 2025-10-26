@@ -103,4 +103,12 @@ router.post("/update", upload.single("img"), async(req, res) => {
     res.status(200).json({message: "User Data Updated"});
 })
 
+router.post("/search", express.json(), async (req, res) => {
+    const term = req.body.term;
+    //Use regex for incomplete searches and levenshtein for errors
+    const users = await user.search(term, 10, 2);
+
+    return res.status(200).json(users);
+})
+
 export default router;

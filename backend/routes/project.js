@@ -33,7 +33,7 @@ router.get("/:id", async (req, res) => {
             return {
                 id: person._id,
                 username: person.username,
-                picture: person.picture,
+                picture: person.img,
                 contributions: c.contributions || [],
                 removed: c.removed || false
             }
@@ -472,6 +472,13 @@ router.post("/add", express.json(), async (req, res) => {
     })
 })
 
+router.post("/search", express.json(), async (req, res) => {
+    const term = req.body.term;
+    //Use regex for incomplete searches and levenshtein for errors
+    const repos = await project.search(term, 10, 2);
+
+    return res.status(200).json(repos);
+})
 
 
 export default router;
