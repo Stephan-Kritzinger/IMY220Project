@@ -144,7 +144,7 @@ const Project = ({ onUserClick, setCreate }) => {
                                     </div>
 
                                 </div>
-                                <Menu onUserClick={onUserClick} repo={repo} onRefresh={fetchProjectData} />
+                                <Menu onUserClick={onUserClick} repo={repo} onRefresh={fetchProjectData} user={user}/>
                                 {showCheckIn && <CheckIn onClose={() => setShowCheckIn(false)} onRefresh={fetchProjectData} />}
                             </>)}
                     </main>

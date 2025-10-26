@@ -9,7 +9,7 @@ import Contributer from "./projectContribute.js"
 
 
 
-const Menu = ({onUserClick, repo, onRefresh}) => {
+const Menu = ({onUserClick, repo, onRefresh, user}) => {
     const [headerState, setHeaderState] = useState("About");
 
     return(
@@ -25,7 +25,7 @@ const Menu = ({onUserClick, repo, onRefresh}) => {
                 {headerState == "About" && <About repo={repo}/>}
                 {headerState == "Files" && <Files files={repo.files}/>}
                 {headerState == "Activity" && <Activity repo={repo.contributers} onUserClick={onUserClick}/>}
-                {headerState == "Contributors" && <Contributer repo={repo.contributers} onUserClick={onUserClick} onRefresh={onRefresh}/>}
+                {headerState == "Contributors" && <Contributer repo={repo.contributers} onUserClick={onUserClick} onRefresh={onRefresh} user={user}/>}
             </div>
         </section>
     )

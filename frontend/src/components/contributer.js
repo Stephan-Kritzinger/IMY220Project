@@ -3,8 +3,7 @@ import { Link, useParams } from "react-router"
 import { useState } from "react"
 import "../styles/contributer.css"
 
-const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRefresh}) => {
-    const curr = JSON.parse(sessionStorage.getItem("user"));
+const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRefresh, user}) => {
     const lastFour = contributions.slice(-4);
     const padded = [...Array(4)].map((_, i) => lastFour[i] || null);
 
@@ -18,7 +17,7 @@ const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRe
             },
             body: JSON.stringify({
                 pid: projectId,
-                uid: curr._id,
+                uid: user._id,
                 removeId: id
             })
         })
@@ -51,7 +50,7 @@ const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRe
                     {c && <div className="seperator"></div>}
                 </div>
             ))}
-            {curr.repositories.includes(projectId) && id !== curr._id &&
+            {user.repositories.includes(projectId) && id !== user._id &&
             <div className="cRemove" >
                 <button onClick={(e) => {e.stopPropagation(); removeContributer(id);}}><img src="/images/trash.svg" /></button>
             </div>}    
