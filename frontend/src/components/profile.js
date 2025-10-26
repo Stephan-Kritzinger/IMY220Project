@@ -46,13 +46,14 @@ const ProfileManager = ({user, onClose}) => {
 }
 
 const Profile = ({user, onClose, onSwitch}) => {
-    const [isFriendSelected, setIsFriendSelected] = useState(true);
+    const [selected, setSelected] = useState("friends");
     const [selUser, setUser] = useState(null)
     const [refresh, setRefresh] = useState(0);
     const [currentUser, setCurrentUser] = useState(() => {
         return sessionStorage.getItem("user_id");
     });
     const [isDragging, setIsDragging] = useState(false);
+    const [contributions, setContributions] = useState([]);
     useEffect(() => {      
         fetch("http://localhost:3000/profile/", {
             method: "POST",
@@ -71,8 +72,24 @@ const Profile = ({user, onClose, onSwitch}) => {
             return response.json();
         })
         .then(data => {
-            console.log(data.user);
+            const user = data.user; //Reflect instantly since state is asynchronous
             setUser(data.user);
+            return fetch("http://localhost:3000/project/allRepos", {
+                method: "GET"
+            });
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error("Error retrieving contributed repos")
+            }
+            return response.json();
+        })
+        .then(data => {
+            const filtered = data.filter(r =>
+                r.contributers?.some(c => c.uid === user._id)
+            );
+            console.log(filtered);
+            setContributions(filtered);
         })
         .catch(err => {
             console.error(err.message)
@@ -244,24 +261,32 @@ const Profile = ({user, onClose, onSwitch}) => {
                 </div>
                 <div className="profileHeader">
                     <div className="profileOptions">
-                        <span className={isFriendSelected ? "profileActive" : ""} onClick={() => setIsFriendSelected(true)}>{selUser._id !== currentUser ? "Mutual " : ""}Friends</span>
-                        <span className={isFriendSelected ? "" : "profileActive"} onClick={() => setIsFriendSelected(false)}>Owned Repositories</span>
+                        <span className={selected == "friends" ? "profileActive" : ""} onClick={() => setSelected("friends")}>{selUser._id !== currentUser ? "Mutual " : ""}Friends</span>
+                        <span className={selected == "owned" ? "profileActive" : ""} onClick={() => setSelected("owned")}>Owned Repositories</span>
+                        <span className={selected == "contributions" ? "profileActive" : ""} onClick={() => setSelected("contributions")}>Contributed Repositories</span>
                     </div>
                     <div className="seperator"></div>
                     <div className="profileOwned">
                         {(currentUser === selUser._id || selUser.friends.mutual.includes(currentUser)) ? (
-                            isFriendSelected ? (
+                            selected == "friends" ? (
                             <div className="">
                                 {selUser.mutuals.filter(friend => friend.id !== currentUser).map(friend => (
                                     <Friend img={friend.img} title={friend.username} key={friend.id} onClick={() => onSwitch(friend)}/>
                                 ))}
                             </div>
-                            ) : (
+                            ) : selected == "owned" ? (
                             <div className="">
                                 {selUser.repositories.map(repo => (
                                 <Repo img={repo.image} title={repo.name} key={repo._id} />
                                 ))}
                             </div>
+                            )
+                            : (
+                                <div>
+                                    {contributions.map(c => (
+                                        <Repo img={c.details.image} title={c.details.name} key={c._id} />
+                                    ))}
+                                </div>
                             )
                         ) : (
                             <div className="fillerMessage" >You must be mutual friends to view this content.</div>
