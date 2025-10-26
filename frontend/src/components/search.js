@@ -6,7 +6,7 @@ import Repo from "./repoPreview.js"
 import Profile from "./profilePreview.js"
 
 
-const Result = ({isProjectSelected, setIsProjectSelected, users, repos}) => {
+const Result = ({isProjectSelected, setIsProjectSelected, users, repos, onUserClick}) => {
 
     return(
         <div className="results">
@@ -17,19 +17,19 @@ const Result = ({isProjectSelected, setIsProjectSelected, users, repos}) => {
             <div className="seperator"></div>
             {isProjectSelected && <div className="scontainer">
                 {repos.map(r => {
-                    return <Repo img={r.details.image} title={r.details.name} key={r._id}/>;
+                    return <Repo img={r.details.image} title={r.details.name} key={r._id} rid={r._id} />;
                 })}
             </div>}
             {!isProjectSelected && <div className="scontainer">
                 {users.map(u => {
-                    return <Profile img={u.img} title={u.username} key={u._id}/>;
+                    return <Profile img={u.img} title={u.username} key={u._id} uid={u._id} onUserClick={onUserClick} />;
                 })}
             </div>}
         </div>
     )
 }
 
-const Search = () => {
+const Search = ({onUserClick}) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isProjectSelected, setIsProjectSelected] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -88,10 +88,10 @@ const Search = () => {
 
     return(
         <div className="search">
-            <input type="search" placeholder="Search for projects/people" onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)}
+            <input type="search" placeholder="Search for projects/people" onFocus={() => setIsFocused(true)} onBlur={() => setTimeout(() => setIsFocused(false), 100)}
                 value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
             <i className="fa-solid fa-magnifying-glass"></i>
-            {isFocused && <Result isProjectSelected={isProjectSelected} setIsProjectSelected={setIsProjectSelected} users={users} repos={repos}/>}
+            {isFocused && <Result isProjectSelected={isProjectSelected} setIsProjectSelected={setIsProjectSelected} users={users} repos={repos} onUserClick={onUserClick}/>}
         </div>
     )
 }

@@ -18,11 +18,12 @@ router.post("/", express.json(), async (req, res) => {
         });
     }
 
-    const mutuals = currentUser.friends.mutual.filter(user =>
-        cursor.friends.mutual.includes(user)
-    );
+    const currentMutuals = currentUser.friends?.mutual ?? [];
+    const cursorMutuals = cursor.friends?.mutual ?? [];
 
-    if (cursor.friends.mutual.includes(currentUser._id.toString()) && currentUser._id.toString() !== cursor._id.toString()) {
+    const mutuals = currentMutuals.filter(user => cursorMutuals.includes(user));
+
+    if (cursorMutuals.includes(currentUser._id.toString()) && currentUser._id.toString() !== cursor._id.toString()) {
         mutuals.push(currentUser._id.toString());
     }
 

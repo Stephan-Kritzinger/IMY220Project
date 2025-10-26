@@ -8,7 +8,7 @@ const Navbar = ({userRefresh, user, onUserClick}) => {
     return(
         <nav>
             <Logo />
-            <Search className="sElement"/>
+            <Search className="sElement" onUserClick={onUserClick}/>
             <span className="active">Feed</span>
             <span>Friends</span>
             <span>Settings</span>

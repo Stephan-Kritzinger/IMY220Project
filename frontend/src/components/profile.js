@@ -261,7 +261,7 @@ const Profile = ({user, onClose, onSwitch}) => {
                     </div>
                     <div className="seperator"></div>
                     <div className="profileOwned">
-                        {(currentUser === selUser._id || selUser.friends.mutual.includes(currentUser)) ? (
+                        {(currentUser === selUser._id && (selUser.friends || selUser.friends.mutual.includes(currentUser))) ? (
                             selected == "friends" ? (
                             <div className="">
                                 {selUser.mutuals.filter(friend => friend.id !== currentUser).map(friend => (
