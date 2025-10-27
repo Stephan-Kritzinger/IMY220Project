@@ -93,7 +93,7 @@ const AddMenu = ({friends, contributers, onClose, onRefresh}) => {
                             setDropdown(false);
                             }}
                         >
-                            <Profile img={profile.user.picture} title={profile.user.username} />
+                            <Profile img={profile.user.img} title={profile.user.username} />
                         </div>
                         ))}
                     </div>}
