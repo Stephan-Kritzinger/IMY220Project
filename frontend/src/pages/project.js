@@ -166,7 +166,7 @@ const Project = ({ onUserClick, setCreate }) => {
                                         {repo.details.status && repo.contributers.filter(r => r.removed !== true).some(r => r.id === user._id) && <button className="checkedIn" onClick={checkOut}>Check out</button>}
                                         {!repo.details.status && repo.contributers.some(r => r.id === user._id) && repo.details.checkedOutBy === user._id && <button className="checkedIn" onClick={() => setShowCheckIn(true)}>Check in</button>}
                                         <button className="checkedIn" onClick={download}>Download</button>
-                                        {user.repositories.some(r => r._id === projectId) && <button className="checkedOut" onClick={deleteProject}>Delete</button>}
+                                        {(user.repositories.some(r => r._id === projectId) || user.admin === true) && <button className="checkedOut" onClick={deleteProject}>Delete</button>}
                                     </div>
 
                                 </div>

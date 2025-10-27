@@ -60,7 +60,8 @@ router.post("/", express.json(), async (req, res) => {
             mutuals: friendArray,
             friends: cursor.friends,
             img: cursor.img,
-            repositories: repos
+            repositories: repos,
+            admin: cursor.admin
     }
 
 

@@ -51,7 +51,7 @@ const Register = () => {
             })
             .then(data => {
                 const user = data.user;
-                sessionStorage.setItem("user_id", user.id);
+                sessionStorage.setItem("user_id", user._id);
                 navigate("/Feed");
             })
             .catch(error => {

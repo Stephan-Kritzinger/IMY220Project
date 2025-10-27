@@ -445,18 +445,33 @@ router.post("/delete", express.json(), async (req, res) => {
     }
 
     const u = await user.getByField("_id", ObjectId.createFromHexString(req.body.uid));
-    if (!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid)) {
+    if (!u.admin && (!u.repositories || !u.repositories.some(rep => rep.toString() === req.body.pid))) {
         return res.status(403).json({
             message: "User is not the owner of this repository"
         })
     }
 
     await project.delete(ObjectId.createFromHexString(req.body.pid));
-    await user.update(ObjectId.createFromHexString(req.body.uid), {
-        $pull: {
-            repositories: ObjectId.createFromHexString(req.body.pid)
+    if(u.admin){
+        for(const c of cursor.contributers){
+            const candidate = await user.getByField("_id", ObjectId.createFromHexString(c.uid));
+            if(candidate.repositories?.some(r => r.toString() === req.body.pid)){
+                await user.update(candidate._id,{
+                    $pull: {
+                        repositories: ObjectId.createFromHexString(req.body.pid)
+                    }
+                })
+            }
         }
-    })
+    }
+    else{
+        await user.update(ObjectId.createFromHexString(req.body.uid), {
+            $pull: {
+                repositories: ObjectId.createFromHexString(req.body.pid)
+            }
+        })
+    }
+
 
     return res.status(200).json({
         message: "Project deleted successfully"
