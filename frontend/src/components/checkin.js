@@ -6,11 +6,10 @@ import "../styles/checkin.css"
 import "../styles/profile.css"
 import "../styles/register.css"
 
-const CheckIn = ({onClose, onRefresh}) => {
+const CheckIn = ({onClose, onRefresh, user}) => {
     const [file, setFile] = useState();
 
     const { projectId } = useParams();
-    const curr = JSON.parse(sessionStorage.getItem("user"))
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -22,7 +21,7 @@ const CheckIn = ({onClose, onRefresh}) => {
         const formData = new FormData();
         formData.append("zipfile", file);
         formData.append("pid", projectId);
-        formData.append("uid", curr._id);
+        formData.append("uid", user._id);
         formData.append("message", e.target.message.value);
         formData.append("version", "v" + Date.now());
 

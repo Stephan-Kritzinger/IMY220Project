@@ -39,6 +39,20 @@
     opacity: 0;
     z-index: 10;
  }
+ .cTransfer{
+    color: white;
+    transform: translateX(90%);
+    opacity: 0;
+    z-index: 10;
+ }
+ .cTransfer > button{
+    background-color: transparent;
+    border: 0;
+ }
+ .cTransfer > button > img{
+    background-color: transparent;
+    width: 24px;
+ }
  .cRemove > button{
     background-color: transparent;
     border: 0;
@@ -47,6 +61,6 @@
     background-color: transparent;
     width: 24px;
  }
- .contributer:hover .cRemove{
+ .contributer:hover .cRemove, .contributer:hover .cTransfer{
     opacity: 1;
  }

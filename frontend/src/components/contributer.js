@@ -3,14 +3,14 @@ import { Link, useParams } from "react-router"
 import { useState } from "react"
 import "../styles/contributer.css"
 
-const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRefresh, user}) => {
+const Contributer = ({ name, picture, contributions = [], id, onUserClick, onRefresh, user }) => {
     const lastFour = contributions.slice(-4);
     const padded = [...Array(4)].map((_, i) => lastFour[i] || null);
 
-    const {projectId} = useParams();
+    const { projectId } = useParams();
 
     const removeContributer = (id) => {
-        fetch("http://localhost:3000/project/remove" , {
+        fetch("http://localhost:3000/project/remove", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -21,14 +21,41 @@ const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRe
                 removeId: id
             })
         })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Error removing contributer")
+                }
+                return response.json();
+            })
+            .then(data => {
+                onRefresh();
+            })
+            .catch(err => {
+                console.error(err.message);
+            })
+    }
+
+    const transferOwnership = (id) => {
+        fetch("http://localhost:3000/project/relinquish", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                pid: projectId,
+                uid: user._id,
+                newOwnerId: id
+            })
+        })
         .then(response => {
             if(!response.ok){
-                throw new Error("Error removing contributer")
+                throw new Error("Error transferring ownership");
             }
             return response.json();
         })
         .then(data => {
             onRefresh();
+            user.repositories = user.repositories.filter(r => r._id !== projectId);
         })
         .catch(err => {
             console.error(err.message);
@@ -36,7 +63,7 @@ const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRe
     }
 
     return (
-        <div className="contributer" onClick={() => onUserClick(id)}>
+        <div className="contributer" onClick={() => onUserClick({ _id: id })}>
             <div className="cPicture"></div>
             <div className="cName">{name}</div>
             <div className="seperator"></div>
@@ -50,11 +77,17 @@ const Contributer = ({ name, picture, contributions = [], id , onUserClick, onRe
                     {c && <div className="seperator"></div>}
                 </div>
             ))}
-            {user.repositories.includes(projectId) && id !== user._id &&
-            <div className="cRemove" >
-                <button onClick={(e) => {e.stopPropagation(); removeContributer(id);}}><img src="/images/trash.svg" /></button>
-            </div>}    
-            
+            {user.repositories.some(r => r._id === projectId) && id !== user._id &&
+                <>
+                    <div className="cRemove" >
+                        <button onClick={(e) => { e.stopPropagation(); removeContributer(id); }}><img src="/images/trash.svg" /></button>
+                    </div>
+                    <div className="cTransfer">
+                        <button onClick={(e) => {e.stopPropagation(); transferOwnership(id); }}><img src="/images/repeat.svg" /></button>
+                    </div>
+                </>
+            }
+
         </div>
     );
 };

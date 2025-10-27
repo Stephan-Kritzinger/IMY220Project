@@ -1,5 +1,5 @@
 import React from "react"
-import { Link, useParams } from "react-router"
+import { Link, useParams, useNavigate } from "react-router"
 import { useState, useEffect } from "react"
 import "../styles/project.css"
 import Navbar from "../components/navbar"
@@ -13,6 +13,7 @@ const Project = ({ onUserClick, setCreate }) => {
     const [refreshUser, setRefreshUser] = useState(0)
 
     const { projectId } = useParams();
+    const navigate = useNavigate();
 
     const fetchProjectData = () => {
         fetch(`http://localhost:3000/project/${projectId}`, {
@@ -118,6 +119,31 @@ const Project = ({ onUserClick, setCreate }) => {
             })
     }, [refreshUser])
 
+    const deleteProject = () => {
+        fetch("http://localhost:3000/project/delete", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                pid: projectId,
+                uid: user._id
+            })
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error("Error deleting the repository");
+            }
+            return response.json();
+        })
+        .then(data => {
+            navigate("/Feed/")
+        })
+        .catch(err => {
+            console.error(err.message)
+        })
+    }
+
     return (
         <>
             {user &&
@@ -137,15 +163,15 @@ const Project = ({ onUserClick, setCreate }) => {
                                     <span className="pStatus">Status: </span>
                                     <span className={!repo.details.status ? "projectBadge checkedOut" : "projectBadge checkedIn"}>{!repo.details.status ? "Checked-Out" : "Checked-In"}</span>
                                     <div className="profileActions">
-                                        {repo.details.status && repo.contributers.some(r => r.id === user._id) && <button className="checkedIn" onClick={checkOut}>Check out</button>}
+                                        {repo.details.status && repo.contributers.filter(r => r.removed !== true).some(r => r.id === user._id) && <button className="checkedIn" onClick={checkOut}>Check out</button>}
                                         {!repo.details.status && repo.contributers.some(r => r.id === user._id) && repo.details.checkedOutBy === user._id && <button className="checkedIn" onClick={() => setShowCheckIn(true)}>Check in</button>}
                                         <button className="checkedIn" onClick={download}>Download</button>
-                                        {user.repositories.includes(projectId) && <button className="checkedOut">Delete</button>}
+                                        {user.repositories.some(r => r._id === projectId) && <button className="checkedOut" onClick={deleteProject}>Delete</button>}
                                     </div>
 
                                 </div>
                                 <Menu onUserClick={onUserClick} repo={repo} onRefresh={fetchProjectData} user={user}/>
-                                {showCheckIn && <CheckIn onClose={() => setShowCheckIn(false)} onRefresh={fetchProjectData} />}
+                                {showCheckIn && <CheckIn onClose={() => setShowCheckIn(false)} onRefresh={fetchProjectData} user={user}/>}
                             </>)}
                     </main>
                 </>

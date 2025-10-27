@@ -6,6 +6,7 @@
 .addOverview{
     display:flex !important;
     flex-direction: column !important;
+    padding-bottom: 20px;
 }
 
 span.addS{

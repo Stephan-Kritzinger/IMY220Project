@@ -11,7 +11,7 @@ const Navbar = ({userRefresh, user, onUserClick, setCreate}) => {
             <Search className="sElement" onUserClick={onUserClick}/>
             <Link to="/Feed">Feed</Link>
             <span onClick={() => setCreate(true, user)}>Create</span>
-            <img src={user.img ? `data:image/png;base64,${user.img}` : "./images/user.svg"} onClick={() => onUserClick(user)}></img>
+            <img src={user.img ? `data:image/png;base64,${user.img}` : "/images/user.svg"} onClick={() => onUserClick(user)}></img>
         </nav>
     )
 }

@@ -199,7 +199,7 @@ const Profile = ({user, onClose, onSwitch}) => {
             <div className="profileOverview" onClick={(e) => e.stopPropagation()}>
                 <div className="profileBlurb" >
                     <div className="profileDetails">
-                        <img className={`tempProfileImg ${isDragging ? "dragging" : ""}`} src={selUser.img ? `data:image/png;base64,${selUser.img}` : "./images/user.svg"}
+                        <img className={`tempProfileImg ${isDragging ? "dragging" : ""}`} src={selUser.img ? `data:image/png;base64,${selUser.img}` : "/images/user.svg"}
                         onDragOver={(e) => {
                             if (selUser._id !== currentUser) return;
                             e.preventDefault();
@@ -261,7 +261,7 @@ const Profile = ({user, onClose, onSwitch}) => {
                     </div>
                     <div className="seperator"></div>
                     <div className="profileOwned">
-                        {(currentUser === selUser._id && (selUser.friends || selUser.friends.mutual.includes(currentUser))) ? (
+                        {(currentUser === selUser._id || (selUser.friends || selUser.friends.mutual.includes(currentUser))) ? (
                             selected == "friends" ? (
                             <div className="">
                                 {selUser.mutuals.filter(friend => friend.id !== currentUser).map(friend => (

@@ -413,7 +413,7 @@ router.post("/relinquish", express.json(), async (req, res) => {
 
     await user.update(ObjectId.createFromHexString(req.body.uid), {
         $pull: {
-            repositories: req.body.pid
+            repositories: ObjectId.createFromHexString(req.body.pid)
         }
     })
 
@@ -426,7 +426,7 @@ router.post("/relinquish", express.json(), async (req, res) => {
 
     await user.update(ObjectId.createFromHexString(req.body.newOwnerId), {
         $addToSet: {
-            repositories: req.body.pid
+            repositories: ObjectId.createFromHexString(req.body.pid)
         }
     })
 
@@ -454,7 +454,7 @@ router.post("/delete", express.json(), async (req, res) => {
     await project.delete(ObjectId.createFromHexString(req.body.pid));
     await user.update(ObjectId.createFromHexString(req.body.uid), {
         $pull: {
-            repositories: req.body.pid
+            repositories: ObjectId.createFromHexString(req.body.pid)
         }
     })
 
