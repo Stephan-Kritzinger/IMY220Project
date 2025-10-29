@@ -25,9 +25,10 @@ const Menu = ({onUserClick, userRefresh, user}) => {
           repo.contributers.map(c => {
             if (Array.isArray(c.contributions)) {
               c.contributions.map(cn => {
-                if (!mostRecent || new Date(cn.timestamp) > new Date(mostRecent.timestamp)) {
+                const currentDate = new Date(cn.date);
+                if (!mostRecent || currentDate > new Date(mostRecent.date)) {
                   mostRecent = cn;
-                  author = c.uid
+                  author = c.uid;
                 }
               })
             }

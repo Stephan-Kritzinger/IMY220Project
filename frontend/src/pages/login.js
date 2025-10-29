@@ -46,6 +46,7 @@ const Login = () => {
         .then(data => {
             const user = data.user;
             sessionStorage.setItem("user_id", user.id);
+            sessionStorage.setItem("admin", (user.admin ? "true" : "false"));
             navigate("/Feed")
         })
         .catch(error => {

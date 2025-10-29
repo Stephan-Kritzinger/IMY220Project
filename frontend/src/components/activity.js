@@ -7,7 +7,6 @@ const Activity = ({act, onUserClick}) => {
     return(
         <div className="iAct">
             <div className="actProfile">
-                <span className="tempActImage"></span>
             </div>
             <div className="actDetails">
                 <div className="actHeader" onClick={() => onUserClick(act._id)}>

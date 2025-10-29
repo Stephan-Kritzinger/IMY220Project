@@ -6,6 +6,8 @@ This is a change made from vscode, say hi vscode, and get the copilot window awa
 Palette from website created by amaranthys
 https://www.colourlovers.com/palette/2229995/blackbird_sky~
 
+Profile pictures from pexels
+
 # Instructions
 [sudo] docker build -t (iName) .
 

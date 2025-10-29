@@ -193,6 +193,24 @@ const Profile = ({user, onClose, onSwitch}) => {
         })
     }
 
+    const deleteUser = () => {
+        fetch("http://localhost:3000/user/delete", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: selUser._id,
+                admin: currentUser
+            })
+        })
+        .then(response => {
+            if(!response.ok){
+                console.error("Error deleting the user")
+            }
+        })
+    }
+
     return ReactDOM.createPortal(
         <div className="profileOverlay" onClick={onClose}>
             {selUser && 
@@ -238,6 +256,8 @@ const Profile = ({user, onClose, onSwitch}) => {
                                 <input type="file" id="profileUpload" style={{display: "none"}} onChange={(e) => changeProfilePicture(e)} accept="image/*" />
                             </>
                         )}
+                        {sessionStorage.getItem("admin") == "true" && 
+                        <button onClick={deleteUser}>Delete User</button>}
                     </div>
                     <div className="seperator"></div>
                     <span className="profileExtra">Extra Details</span>
@@ -261,11 +281,13 @@ const Profile = ({user, onClose, onSwitch}) => {
                     </div>
                     <div className="seperator"></div>
                     <div className="profileOwned">
-                        {(currentUser === selUser._id || (selUser.friends || selUser.friends.mutual.includes(currentUser))) ? (
+                        {(currentUser === selUser._id || (selUser.friends || selUser.friends?.mutual?.includes(currentUser))) ? (
                             selected == "friends" ? (
                             <div className="">
                                 {selUser.mutuals.filter(friend => friend.id !== currentUser).map(friend => (
-                                    <Friend img={friend.img} title={friend.username} key={friend.id} onClick={() => onSwitch(friend)}/>
+                                    <div onClick={(e) => {e.stopPropagation(); onSwitch(friend)}} key={friend.id}>
+                                        <Friend img={friend.img} title={friend.username} key={friend.id} />
+                                    </div>
                                 ))}
                             </div>
                             ) : selected == "owned" ? (

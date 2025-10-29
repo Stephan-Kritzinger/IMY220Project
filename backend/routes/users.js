@@ -78,7 +78,8 @@ router.post("/login", express.json(), async(req, res) => {
     res.status(200).json({
         message: "Login successful",
         user: {
-            id: cursor._id
+            id: cursor._id,
+            admin: cursor.admin
         }
     })
 })
@@ -111,4 +112,16 @@ router.post("/search", express.json(), async (req, res) => {
     return res.status(200).json(users);
 })
 
+router.post("/delete", express.json(), async (req, res) => {
+    const cursor = await user.getByField("_id", ObjectId.createFromHexString(req.body.id));
+    const admin = await user.getByField("_id", ObjectId.createFromHexString(req.body.admin));
+
+    if(!admin.admin){
+        return res.status(403).json({message: "You do not have permission to perform this action"})
+    }
+
+    await user.delete(ObjectId.createFromHexString(req.body.id));
+
+    return res.status(200).json({message: "User successfully deleted"});
+})
 export default router;
